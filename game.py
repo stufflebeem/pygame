@@ -3,13 +3,16 @@ import pygame
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((600, 400))
+WIDTH = 600
+HEIGHT = 400
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 running = True
 
+# creates the spritesheet from roguelikeChar_transparent.png and allows you to pick different elements of 
 sprite_sheet = pygame.image.load("roguelikeChar_transparent.png").convert_alpha()
 def get_sprite(sheet, x, y, width, height):
-    """extracts sprites from the roguelikeChar_transparent.png where
+    """extracts sprites from a spritesheet where:
     sheet: loaded sprite image sheet
     x: X coordinate of top-left corner of sprite
     y: Y coordinate of top-left corner of sprite
@@ -22,15 +25,12 @@ def get_sprite(sheet, x, y, width, height):
     return sprite_image
 # establishes the player sprite frame
 player_frame = get_sprite(sprite_sheet, 0, 0, 16, 16)
-# creates a class of sprite called Player
-class Player(pygame.sprite.Sprite):
-    def __init__(self, image, x, y):
-        super().__init__()
-        self.image = image
-        self.rect = self.image.get_rect(topleft=(x,y))
-# positions the player sprite and loads him
-player_sprite = Player(player_frame, 300, 200)
-all_sprites = pygame.sprite.Group(player_sprite)
+#creates initial player x and y
+player_x = int(WIDTH/2)
+player_y = int(HEIGHT/2)
+player_speed = 3
+def player(x,y):
+    screen.blit(player_frame, (player_x, player_y))
 
 while running:
     # poll for events
@@ -43,8 +43,22 @@ while running:
     screen.fill("white")
 
     # RENDER YOUR GAME HERE
-    all_sprites.draw(screen)
-    # flip() the display to put your work on screen
+
+    # Creates input for all input keys
+    keys = pygame.key.get_pressed()
+   
+    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        player_x -= player_speed
+    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+        player_x += player_speed
+    if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+        player_y += player_speed
+    if keys[pygame.K_UP] or keys[pygame.K_w]:
+        player_y -= player_speed
+    
+    player(player_x,player_y)
+
+    # flip() the display to put your work on the screen
     pygame.display.flip()
 
     clock.tick(60)  # limits FPS to 60

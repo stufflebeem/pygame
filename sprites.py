@@ -15,46 +15,68 @@ def get_sprite(sheet, x, y, width, height):
 
 # creates a class of sprite Player for the user to control
 class Player():
-    def __init__(self, player_x, player_y, player_speed):
-        """player_x: the x coordinate of the sprite
-           player_y: the y coordinate of the sprite
-           player_speed: the number of pixles the sprite moves per frame"""
-        self.player_x = player_x
-        self.player_y = player_y
-        self.player_speed = player_speed
-
-    def player_frame(self,sprite_sheet, sprite_sheet_x, sprite_sheet_y):
+    def __init__(self, world_x, world_y, speed):
+        """world_x: the x coordinate of the sprite on the map
+           world_y: the y coordinate of the sprite on the map
+           speed: the number of pixles the sprite moves per frame"""
+        self.world_x = world_x
+        self.world_y = world_y
+        self.speed = speed
+        
+    def player_frame(self,sprite_sheet, x, y):
         """sprite_sheet: the sheet where the sprite is located
-           sprite_sheet_x: the x coordinate of the sprite on the sprite sheet
-           sprite_sheet_y: the y coordinate of the sprite on the sprite sheet"""
-        self.player_frame = get_sprite(sprite_sheet, sprite_sheet_x, sprite_sheet_y, 16, 16)
-        self.sprite_sheet_x = sprite_sheet_x
-        self.sprite_sheet_y = sprite_sheet_y
+           x: the x coordinate of the sprite on the sprite sheet
+           y: the y coordinate of the sprite on the sprite sheet"""
+        self.sprite = get_sprite(sprite_sheet, x, y, 16, 16)
 
-    def draw(self, surface):
-        "surface: the screen on which the sprite is drawn"
-        surface.blit(self.player_frame, (self.player_x, self.player_y))
-
+    def draw(self, surface, screen_x, screen_y):
+        """surface: the screen on which the sprite is drawn
+           screen_x: the x coordinate of the sprite on the screen
+           screen_y: the y coordinate of the sprite on the screen"""
+        self.screen_x = screen_x
+        self.screen_y = screen_y
+        surface.blit(self.sprite, (self.screen_x, self.screen_y))
+    
     def keys(self):
-        """takes keystroke inputs and changes the position of the sprite on the screen relative to
-        the player_speed"""
+        """takes keystroke inputs and changes the position of the sprite on the map relative to
+        the speed"""
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            self.player_x -= self.player_speed
+            self.world_x -= self.speed
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            self.player_x += self.player_speed
+            self.world_x += self.speed
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            self.player_y += self.player_speed
+            self.world_y += self.speed
         if keys[pygame.K_UP] or keys[pygame.K_w]:
-            self.player_y -= self.player_speed
-    def speed(self):
-        speed = pygame.key.get_pressed()
-        if speed[pygame.K_LSHIFT]:
-            self.player_speed += 0.1
-        if speed[pygame.K_LCTRL]:
-            self.player_speed -= 0.1
-        if self.player_speed < 0:
-            self.player_speed = abs(self.player_speed)
+            self.world_y -= self.speed
+
+    def adjust_speed(self):
+        """changes the speed of the sprite based on LSHIFT and LCRTL inputs"""
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LSHIFT]:
+            self.speed += 0.1
+        if keys[pygame.K_LCTRL]:
+            self.speed -= 0.1
+        self.speed = abs(self.speed)
+
+# Creates a class called tiles to create maps and backgrounds
+class Tiles():
+    def __init__(self):
+       """initializes the tile, creates variables for the map"""
+       self.image = pygame.image.load('town/tiles/tile_0001.png').convert_alpha()
+       self.tile_size = 16
+       self.map_width = 80
+       self.map_height = 80
+
+    def draw(self,surface, camera_x, camera_y):
+        """draws the tiles on a surface the size of the map and shows the area visible on the screen"""
+        for x in range(self.map_width):
+            for y in range(self.map_height):
+                tile_world_x = x * self.tile_size
+                tile_world_y = y * self.tile_size
+                screen_x = tile_world_x - camera_x
+                screen_y = tile_world_y - camera_y
+                surface.blit(self.image, (screen_x,screen_y))
 
 # creates a class of Items for the Player and others to wear and use
 class Items():
@@ -83,7 +105,7 @@ class Items():
     def dress_red(self):
         self.dress_red = get_sprite(self.sprite_sheet, 68, 68, 16, 16)
     def dress_purple(self):
-        self.dress_purple = get_sprite(self.prite_sheet, 51, 170, 16, 16)
+        self.dress_purple = get_sprite(self.sprite_sheet, 51, 170, 16, 16)
     def boots_black(self):
         self.boots_black = get_sprite(self.sprite_sheet, 85, 0, 16, 16)
     def boots_brown(self):

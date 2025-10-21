@@ -1,0 +1,9 @@
+WIDTH = 800
+HEIGHT = 600
+pants = "none"
+boots = "none"
+shirt = "none"
+hair = "none"
+helmet = "none"
+shield = "none"
+weapon = "none"

@@ -1,24 +1,24 @@
 # Example file showing a basic pygame "game loop"|
 import pygame
-from sprites import get_sprite, Player, Items, Tiles
+from util_params import *
+from item_data import *
+from sprites import *
 
 # pygame setup
 pygame.init()
-WIDTH = 800
-HEIGHT = 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 running = True
 
-# loads sprite sheet
+# creates spritesheet to gather sprites
 sprite_sheet = pygame.image.load('characters/sprites/roguelikeChar_transparent.png').convert_alpha()
+items = Items(sprite_sheet)
 
 # creates player robert
-robert = Player(int(WIDTH/2), int(HEIGHT/2), 1)
-robert.player_frame(sprite_sheet, 0, 0)
+robert = Player(items, (WIDTH/2), (HEIGHT/2), 1, sprite_sheet, 0, 0)
 
 # creates background
-grass = Tiles()
+grass = Tiles('town/tiles/grass_green/tile_0001.png')
 
 while running:
     # poll for events
@@ -27,17 +27,18 @@ while running:
         if event.type == pygame.QUIT:
             running = False
     screen.fill('black')
+   
     # RENDER YOUR GAME HERE
-
-    # functions
-    robert.adjust_speed()
-    robert.keys()
     camera_x = robert.world_x - WIDTH/2
     camera_y = robert.world_y - HEIGHT/2
-
+    
+    # functions  
+    robert.keys(grass)
+  
     # drawing
     grass.draw(screen, camera_x, camera_y)
-    robert.draw(screen, WIDTH/2, HEIGHT/2)
+    robert.draw(screen)
+    
 
     # flip() the display to put your work on the screen
     pygame.display.flip()

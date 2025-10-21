@@ -1,69 +1,90 @@
 import pygame
+from item_data import *
+from util_params import *
 
 def get_sprite(sheet, x, y, width, height):
     """extracts sprites from a spritesheet where:
     sheet: loaded sprite image sheet
     x: X coordinate of top-left corner of sprite
     y: Y coordinate of top-left corner of sprite
-    width: Width of the sprite
-    height: Height of the sprite"""
+    width: width of the sprite
+    height: height of the sprite"""
+   
     # creates surface space for the sprite
     sprite_image = pygame.Surface((width, height), pygame.SRCALPHA).convert_alpha()
+   
     # blits desired sprite onto the new surface
     sprite_image.blit(sheet, (0,0), (x, y, width, height))
+    
     return sprite_image
 
 # creates a class of sprite Player for the user to control
 class Player():
-    def __init__(self, world_x, world_y, speed):
+    def __init__(self, items, world_x, world_y, speed, sprite_sheet, x, y):
         """world_x: the x coordinate of the sprite on the map
            world_y: the y coordinate of the sprite on the map
-           speed: the number of pixles the sprite moves per frame"""
+           speed: the number of pixles the sprite moves per frame
+           sprite_sheet: the sheet where the sprite is located
+           x: the x coordinate of the sprite on the sprite sheet
+           y: the y coordinate of the sprite on the sprite sheet"""
         self.world_x = world_x
         self.world_y = world_y
         self.speed = speed
-        
-    def player_frame(self,sprite_sheet, x, y):
-        """sprite_sheet: the sheet where the sprite is located
-           x: the x coordinate of the sprite on the sprite sheet
-           y: the y coordinate of the sprite on the sprite sheet"""
+        self.items = items
         self.sprite = get_sprite(sprite_sheet, x, y, 16, 16)
 
-    def draw(self, surface, screen_x, screen_y):
+    def draw(self, surface):
         """surface: the screen on which the sprite is drawn
            screen_x: the x coordinate of the sprite on the screen
            screen_y: the y coordinate of the sprite on the screen"""
-        self.screen_x = screen_x
-        self.screen_y = screen_y
-        surface.blit(self.sprite, (self.screen_x, self.screen_y))
-    
-    def keys(self):
+        # blits the player sprite onto
+        surface.blit(self.sprite, (WIDTH/2,HEIGHT/2))
+        player_pants = self.items.load_items(pants)
+        player_boots = self.items.load_items(boots)
+        player_shirt = self.items.load_items(shirt)
+        player_hair = self.items.load_items(hair)
+        player_helmet = self.items.load_items(helmet)
+        player_shield = self.items.load_items(shield)
+        player_weapon = self.items.load_items(weapon)
+        surface.blit(player_pants["sprite"],(WIDTH/2,HEIGHT/2))
+        surface.blit(player_boots["sprite"],(WIDTH/2,HEIGHT/2))
+        surface.blit(player_shirt["sprite"],(WIDTH/2,HEIGHT/2))
+        surface.blit(player_helmet["sprite"],(WIDTH/2,HEIGHT/2))
+        surface.blit(player_hair["sprite"],(WIDTH/2,HEIGHT/2))
+        surface.blit(player_shield["sprite"],(WIDTH/2,HEIGHT/2))
+        surface.blit(player_weapon["sprite"],(WIDTH/2,HEIGHT/2))
+
+    def keys(self, tiles):
         """takes keystroke inputs and changes the position of the sprite on the map relative to
         the speed"""
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            self.world_x -= self.speed
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            self.world_x += self.speed
-        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            self.world_y += self.speed
-        if keys[pygame.K_UP] or keys[pygame.K_w]:
-            self.world_y -= self.speed
 
-    def adjust_speed(self):
-        """changes the speed of the sprite based on LSHIFT and LCRTL inputs"""
+        map_width = tiles.map_width * tiles.tile_size
+        map_height = tiles.map_height * tiles.tile_size
+        sprite_size = 16
+
+        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.world_x > 0 + WIDTH/2:
+            self.world_x -= self.speed
+        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.world_x < map_width - WIDTH/2:
+            self.world_x += self.speed
+        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.world_y < map_height - HEIGHT/2:
+            self.world_y += self.speed
+        if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.world_y > 0 + HEIGHT/2:
+            self.world_y -= self.speed
+            """changes the speed of the sprite based on LSHIFT and LCRTL inputs"""
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LSHIFT]:
             self.speed += 0.1
         if keys[pygame.K_LCTRL]:
             self.speed -= 0.1
         self.speed = abs(self.speed)
+        
 
 # Creates a class called tiles to create maps and backgrounds
 class Tiles():
-    def __init__(self):
+    def __init__(self, tile):
        """initializes the tile, creates variables for the map"""
-       self.image = pygame.image.load('town/tiles/tile_0001.png').convert_alpha()
+       self.image = pygame.image.load(tile).convert_alpha()
        self.tile_size = 16
        self.map_width = 80
        self.map_height = 80
@@ -82,43 +103,8 @@ class Tiles():
 class Items():
     def __init__(self, sprite_sheet):
         self.sprite_sheet = sprite_sheet
-    def pants_black(self):
-        self.pants_black = get_sprite(self.sprite_sheet, 51, 0, 16, 16)
-    def pants_brown(self):
-        self.pants_brow = get_sprite(self.sprite_sheet, 51, 17, 16, 16)
-    def pants_iron(self):
-        self.pants_iron = get_sprite(self.sprite_sheet, 51, 34, 16, 16)
-    def pants_leather(self):
-        self.pants_leather = get_sprite(self.sprite_sheet, 51, 51, 16, 16)
-    def pants_red(self):
-        self.pants_leather = get_sprite(self.sprite_sheet, 51, 85, 16,16)
-    def pants_blue(self):
-        self.pants_blue = get_sprite(self.sprite_sheet, 51, 102, 16,16)
-    def pants_purple(self):
-        self.pants_purple = get_sprite(self.sprite_sheet, 51, 119, 16, 16)
-    def pants_green(self):
-        self.pants_green = get_sprite(self.sprite_sheet, 51, 136, 16, 16)
-    def dress_blue(self):
-        self.pants_green = get_sprite(self.sprite_sheet, 51, 68, 16, 16)
-    def dress_brown(self):
-        self.dress_brown = get_sprite(self.sprite_sheet, 51, 170, 16, 16)
-    def dress_red(self):
-        self.dress_red = get_sprite(self.sprite_sheet, 68, 68, 16, 16)
-    def dress_purple(self):
-        self.dress_purple = get_sprite(self.sprite_sheet, 51, 170, 16, 16)
-    def boots_black(self):
-        self.boots_black = get_sprite(self.sprite_sheet, 85, 0, 16, 16)
-    def boots_brown(self):
-        self.boots_brown = get_sprite(self.sprite_sheet, 85, 17, 16, 16)
-    def boots_iron(self):
-        self.boots_iron = get_sprite(self.sprite_sheet, 85, 34, 16, 16)
-    def boots_leather(self):
-        self.boots_iron = get_sprite(self.sprite_sheet, 85, 51, 16, 16)
-    def boots_red(self):
-        self.boots_red = get_sprite(self.sprite_sheet, 85, 85, 16, 16)
-    def boots_blue(self):
-        self.boots_blue = get_sprite(self.sprite_sheet, 85, 102, 16, 16)
-    def boots_purple(self):
-        self.boots_purple = get_sprite(self.sprite_sheet, 85, 119, 16, 16)
-    def boots_green(self):
-        self.boots_green = get_sprite(self.sprite_sheet, 85, 136, 16, 16)
+    def load_items(self, name):
+        data = item_data[name]
+        x,y = data["pos"]
+        sprite = get_sprite(self.sprite_sheet, x, y, 16, 16)
+        return {"name":name, "sprite":sprite,"category":data["category"], "stats":data["stats"]}

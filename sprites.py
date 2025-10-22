@@ -20,7 +20,7 @@ def get_sprite(sheet, x, y, width, height):
 
 # creates a class of sprite Player for the user to control
 class Player():
-    def __init__(self, items, world_x, world_y, speed, sprite_sheet, x, y):
+    def __init__(self, items, world_x, world_y, speed):
         """world_x: the x coordinate of the sprite on the map
            world_y: the y coordinate of the sprite on the map
            speed: the number of pixles the sprite moves per frame
@@ -31,28 +31,17 @@ class Player():
         self.world_y = world_y
         self.speed = speed
         self.items = items
-        self.sprite = get_sprite(sprite_sheet, x, y, 16, 16)
 
     def draw(self, surface):
         """surface: the screen on which the sprite is drawn
            screen_x: the x coordinate of the sprite on the screen
            screen_y: the y coordinate of the sprite on the screen"""
         # blits the player sprite onto
-        surface.blit(self.sprite, (WIDTH/2,HEIGHT/2))
-        player_pants = self.items.load_items(pants)
-        player_boots = self.items.load_items(boots)
-        player_shirt = self.items.load_items(shirt)
-        player_hair = self.items.load_items(hair)
-        player_helmet = self.items.load_items(helmet)
-        player_shield = self.items.load_items(shield)
-        player_weapon = self.items.load_items(weapon)
-        surface.blit(player_pants["sprite"],(WIDTH/2,HEIGHT/2))
-        surface.blit(player_boots["sprite"],(WIDTH/2,HEIGHT/2))
-        surface.blit(player_shirt["sprite"],(WIDTH/2,HEIGHT/2))
-        surface.blit(player_helmet["sprite"],(WIDTH/2,HEIGHT/2))
-        surface.blit(player_hair["sprite"],(WIDTH/2,HEIGHT/2))
-        surface.blit(player_shield["sprite"],(WIDTH/2,HEIGHT/2))
-        surface.blit(player_weapon["sprite"],(WIDTH/2,HEIGHT/2))
+        blit_list = [model, pants,boots,shirt, hair, helmet, 
+                     shield, weapon]
+        for b in blit_list:
+           sprite = self.items.load_items(b)
+           surface.blit(sprite["sprite"],(WIDTH/2,HEIGHT/2))
 
     def keys(self, tiles):
         """takes keystroke inputs and changes the position of the sprite on the map relative to

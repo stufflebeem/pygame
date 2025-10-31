@@ -1,6 +1,5 @@
 import pygame
-from item_data import *
-from util_params import *
+from game_data import *
 
 def get_sprite(sheet, x, y, width, height):
     """extracts sprites from a spritesheet where:
@@ -75,8 +74,8 @@ class Tiles():
        """initializes the tile, creates variables for the map"""
        self.image = pygame.image.load(tile).convert_alpha()
        self.tile_size = 16
-       self.map_width = 80
-       self.map_height = 80
+       self.map_width = map_width
+       self.map_height = map_height
 
     def draw(self,surface, camera_x, camera_y):
         """draws the tiles on a surface the size of the map and shows the area visible on the screen"""
@@ -97,3 +96,93 @@ class Items():
         x,y = data["pos"]
         sprite = get_sprite(self.sprite_sheet, x, y, 16, 16)
         return {"name":name, "sprite":sprite,"category":data["category"], "stats":data["stats"]}
+    
+# create a house
+class House():
+    def __init__(self):
+
+        self.tile_size = 16
+        self.house_width = 5
+        self.house_height = 4
+        self.wall = pygame.image.load("town/tiles/building_brick/tile_0073.png")
+        self.wall_left = pygame.image.load("town/tiles/building_brick/tile_0072.png")
+        self.wall_right = pygame.image.load("town/tiles/building_brick/tile_0075.png")
+        self.door = pygame.image.load("town/tiles/building_brick/tile_0085.png")
+        self.roof_top = pygame.image.load("town/tiles/roof_stone/tile_0049.png")
+        self.roof_bottom = pygame.image.load("town/tiles/roof_stone/tile_0061.png")
+        self.roof_left = pygame.image.load("town/tiles/roof_stone/tile_0060.png")
+        self.roof_right = pygame.image.load("town/tiles/roof_stone/tile_0062.png")
+        self.roof_left_corner = pygame.image.load("town/tiles/roof_stone/tile_0048.png")
+        self.roof_right_corner = pygame.image.load("town/tiles/roof_stone/tile_0050.png")
+        self.roof_arch = pygame.image.load("town/tiles/roof_stone/tile_0063.png")
+
+    def draw_surface(self, surface):
+        def draw_wall(surface):
+            for x in range (1, self.house_width-1):
+                for y in range(2, self.house_height):
+                    surface_x = x * self.tile_size
+                    surface_y = y * self.tile_size
+                    surface.blit(self.wall, (surface_x, surface_y))
+        def draw_wall_left(surface):
+            for y in range(2, self.house_height):
+                surface_x = 0 * self.tile_size
+                surface_y = y * self.tile_size
+                surface.blit(self.wall_left, (surface_x, surface_y))
+        def draw_wall_right(surface):
+            for y in range(2, self.house_height):
+                surface_x = (self.house_width-1) * self.tile_size
+                surface_y = y * self.tile_size
+                surface.blit(self.wall_right, (surface_x, surface_y))
+        def draw_door(surface):
+            surface_x = (self.house_width-3) * self.tile_size
+            surface_y = (self.house_height-1) * self.tile_size
+            surface.blit(self.door, (surface_x, surface_y))
+        def draw_roof_top(surface):
+            for x in range (1, self.house_width-1):
+                surface_x = x * self.tile_size
+                surface_y = 0 * self.tile_size
+                surface.blit(self.roof_top, (surface_x, surface_y))
+        def draw_roof_bottom(surface):
+            for x in range (1, self.house_width-1):
+                surface_x = x * self.tile_size
+                surface_y = 1 * self.tile_size
+                surface.blit(self.roof_bottom, (surface_x, surface_y))
+        def draw_roof_left(surface):
+            surface_x = 0 * self.tile_size
+            surface_y = 1 * self.tile_size
+            surface.blit(self.roof_left, (surface_x, surface_y))
+        def draw_roof_right(surface):
+            surface_x = (self.house_width-1) * self.tile_size
+            surface_y = 1 * self.tile_size
+            surface.blit(self.roof_right, (surface_x, surface_y))
+        def draw_roof_arch(surface):
+            surface_x = (self.house_width-3) * self.tile_size
+            surface_y = (self.house_height-3) * self.tile_size
+            surface.blit(self.roof_arch, (surface_x, surface_y))
+        def draw_roof_left_corner(surface):
+            surface_x = 0 * self.tile_size
+            surface_y = 0 * self.tile_size
+            surface.blit(self.roof_left_corner, (surface_x, surface_y))
+        def draw_roof_right_corner(surface):
+            surface_x = (self.house_width-1) * self.tile_size
+            surface_y = 0 * self.tile_size
+            surface.blit(self.roof_right_corner, (surface_x, surface_y))
+        
+        draw_wall(surface)
+        draw_wall_left(surface)
+        draw_wall_right(surface)
+        draw_door(surface)
+        draw_roof_top(surface)
+        draw_roof_bottom(surface)
+        draw_roof_left(surface)
+        draw_roof_right(surface)
+        draw_roof_arch(surface)
+        draw_roof_left_corner(surface)
+        draw_roof_right_corner(surface)
+
+    def draw(self, sprite_surface, screen_surface, map_x, map_y, camera_x, camera_y):
+        screen_x = map_x - camera_x
+        screen_y = map_y - camera_y
+        screen_surface.blit(sprite_surface, (screen_x, screen_y))
+        
+    

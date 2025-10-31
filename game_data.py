@@ -1,3 +1,32 @@
+WIDTH = 800
+HEIGHT = 600
+map_width = 80
+map_height = 80
+model = "model_1"
+pants = "pants_1"
+boots = "boots_1"
+shirt = "shirt_1"
+hair = "hair_1"
+helmet = "helmet_1"
+shield = "shield_1"
+weapon = "none"
+zoom_level = 2
+zoom_speed = 0.05
+player_speed = 1
+background = "town/tiles/grass_green/tile_0001.png"
+
+brick_house = {
+    'wall'
+    'wall_left'
+    'wall_right'
+    'door'
+    'roof_top'
+    'roof_bottom'
+    'roof_left'
+    'roof_right'
+
+}
+
 item_data = {
     "none": {"pos": (34, 0),   "category": "none", "stats": {"defense": 0, "speed": 0}},
     

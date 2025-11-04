@@ -28,6 +28,19 @@ brick_house = {
     'roof_right_corner':{'img':"town/tiles/roof_stone/tile_0050.png",'pos_x':(4,5),'pos_y':(0,1)},
     'roof_arch':{'img':"town/tiles/roof_stone/tile_0063.png",'pos_x':(2,3),'pos_y':(1,2)}
 }
+stone_house = {
+    'wall':{'img':"town/tiles/building_stone/tile_0077.png", 'pos_x':(1,4),'pos_y':(2,4)},
+    'wall_left':{'img':"town/tiles/building_stone/tile_0076.png",'pos_x':(0,1),'pos_y':(2,4)},
+    'wall_right':{'img':"town/tiles/building_stone/tile_0079.png",'pos_x':(4,5),'pos_y':(2,4)},
+    'door':{'img':"town/tiles/building_stone/tile_0089.png",'pos_x':(2,3),'pos_y':(3,4)},
+    'roof_top':{'img':"town/tiles/roof_brick/tile_0053.png",'pos_x':(1,4),'pos_y':(0,1)},
+    'roof_bottom':{'img':"town/tiles/roof_brick/tile_0065.png",'pos_x':(1,4),'pos_y':(1,2)},
+    'roof_left':{'img':"town/tiles/roof_brick/tile_0064.png",'pos_x':(0,1),'pos_y':(1,2)},
+    'roof_right':{'img':"town/tiles/roof_brick/tile_0066.png",'pos_x':(4,5),'pos_y':(1,2)},
+    'roof_left_corner':{'img':"town/tiles/roof_brick/tile_0052.png",'pos_x':(0,1),'pos_y':(0,1)},
+    'roof_right_corner':{'img':"town/tiles/roof_brick/tile_0054.png",'pos_x':(4,5),'pos_y':(0,1)},
+    'roof_arch':{'img':"town/tiles/roof_brick/tile_0067.png",'pos_x':(2,3),'pos_y':(1,2)}
+}
 
 item_data = {
     "none": {"pos": (34, 0),   "category": "none", "stats": {"defense": 0, "speed": 0}},

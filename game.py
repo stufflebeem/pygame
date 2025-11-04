@@ -31,7 +31,7 @@ robert = Player(items, (grass.map_width*grass.tile_size)/2, (grass.map_height*gr
 # create a variety of houses on the map
 house_group = pygame.sprite.Group()
 
-brick_houses = House(brick_house_surface, brick_house)
+brick_houses = House(brick_house_surface, stone_house)
 
 while running:
     # poll for events

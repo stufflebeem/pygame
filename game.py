@@ -1,7 +1,8 @@
 # Example file showing a basic pygame "game loop"|
 import pygame
 from game_data import *
-from sprites import *
+from player import *
+from map import *
 
 # pygame setup
 pygame.init()
@@ -26,8 +27,11 @@ grass = Tiles(background)
 
 # creates player robert centered in the map
 robert = Player(items, (grass.map_width*grass.tile_size)/2, (grass.map_height*grass.tile_size)/2, player_speed)
-brick_house = House()
-brick_house.draw_surface(brick_house_surface)
+
+# create a variety of houses on the map
+house_group = pygame.sprite.Group()
+
+brick_houses = House(brick_house_surface, brick_house)
 
 while running:
     # poll for events
@@ -61,9 +65,7 @@ while running:
     # drawing
     grass.draw(game_surface, camera_x, camera_y)
     robert.draw(game_surface)
-    brick_house.draw(brick_house_surface, game_surface, 30*16, 20*16, camera_x, camera_y)
-    
-
+    brick_houses.draw(brick_house_surface, game_surface, camera_x, camera_y)
     # flip() the display to put your work on the screen
     pygame.display.flip()
 

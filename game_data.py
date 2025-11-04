@@ -16,15 +16,17 @@ player_speed = 1
 background = "town/tiles/grass_green/tile_0001.png"
 
 brick_house = {
-    'wall'
-    'wall_left'
-    'wall_right'
-    'door'
-    'roof_top'
-    'roof_bottom'
-    'roof_left'
-    'roof_right'
-
+    'wall':{'img':"town/tiles/building_brick/tile_0073.png", 'pos_x':(1,4),'pos_y':(2,4)},
+    'wall_left':{'img':"town/tiles/building_brick/tile_0072.png",'pos_x':(0,1),'pos_y':(2,4)},
+    'wall_right':{'img':"town/tiles/building_brick/tile_0075.png",'pos_x':(4,5),'pos_y':(2,4)},
+    'door':{'img':"town/tiles/building_brick/tile_0085.png",'pos_x':(2,3),'pos_y':(3,4)},
+    'roof_top':{'img':"town/tiles/roof_stone/tile_0049.png",'pos_x':(1,4),'pos_y':(0,1)},
+    'roof_bottom':{'img':"town/tiles/roof_stone/tile_0061.png",'pos_x':(1,4),'pos_y':(1,2)},
+    'roof_left':{'img':"town/tiles/roof_stone/tile_0060.png",'pos_x':(0,1),'pos_y':(1,2)},
+    'roof_right':{'img':"town/tiles/roof_stone/tile_0062.png",'pos_x':(4,5),'pos_y':(1,2)},
+    'roof_left_corner':{'img':"town/tiles/roof_stone/tile_0048.png",'pos_x':(0,1),'pos_y':(0,1)},
+    'roof_right_corner':{'img':"town/tiles/roof_stone/tile_0050.png",'pos_x':(4,5),'pos_y':(0,1)},
+    'roof_arch':{'img':"town/tiles/roof_stone/tile_0063.png",'pos_x':(2,3),'pos_y':(1,2)}
 }
 
 item_data = {

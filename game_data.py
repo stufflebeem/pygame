@@ -12,10 +12,7 @@ helmet = "helmet_1"
 shield = "shield_1"
 weapon = "none"
 zoom_level = 2
-zoom_speed = 0.05
-player_speed = 1
-locations = []
-collision = False
+player_speed = 1.5
 
 background = {
     'grass_1':{'img':"town/tiles/grass_green/tile_0000.png"},

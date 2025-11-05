@@ -1,4 +1,3 @@
-# Example file showing a basic pygame "game loop"|
 import pygame
 from game_data import *
 from player import *
@@ -10,6 +9,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 running = True
 pygame.display.set_caption("Adventure Game")
+pygame.mouse.set_visible(False)
 
 # creates spritesheet to gather sprites
 sprite_sheet = pygame.image.load('characters/sprites/roguelikeChar_transparent.png').convert_alpha()
@@ -21,19 +21,15 @@ game_surface = pygame.Surface((WIDTH, HEIGHT)).convert_alpha()
 # creates background
 grass = Tiles()
 
-# create a variety of buildings on the map
-building_group = pygame.sprite.Group()
-for _ in range (5):
-     building_group.add(House(brick_house))
-for _ in range (5):
-     building_group.add(House(stone_house))
-building_group.add(Castle())
-
 # create a border of trees around the map
 tree = Tree() 
 
+# create a variety of buildings on the map
+building_group = pygame.sprite.Group()
+create_buildings(building_group)
+
 # creates player centered in the map
-player = Player(items, (map_width*tile_size)/2, (map_height*tile_size)/2, player_speed, building_group)
+player = Player(items, player_speed, building_group)
 
 while running:
     # poll for events
@@ -57,6 +53,12 @@ while running:
     # functions
     player.keys()
     
+    # checkin for collisions
+    collided_sprites = pygame.sprite.spritecollide(player, building_group, False)
+    if collided_sprites:
+        print("collision")
+
+
     # drawing
     grass.draw(game_surface, camera_x, camera_y)
     tree.draw(game_surface, camera_x, camera_y)
@@ -66,7 +68,8 @@ while running:
     
     # flip() the display to put your work on the screen
     pygame.display.flip()
-
-    clock.tick(60)  # limits FPS to 60
+    
+    # limits FPS to 60
+    clock.tick(60)  
 
 pygame.quit()

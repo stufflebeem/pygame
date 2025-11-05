@@ -51,16 +51,11 @@ class House(pygame.sprite.Sprite):
                     self.image.blit(pygame.image.load(self.type[i]['img']), (surface_x, surface_y))
         self.map_x = randrange(int(0+WIDTH/2),int(map_width*16-WIDTH/2-self.house_width*16),self.house_width*16)
         self.map_y = randrange(int(0+HEIGHT/2),int(map_height*16-HEIGHT/2-self.house_height*16),self.house_height*16*2)
-        if [self.map_x,self.map_x] in locations:
-            'none'
-        else:
-            locations.append([self.map_x,self.map_x])
 
     def draw(self, screen_surface, camera_x, camera_y):
         screen_x = self.map_x - camera_x
         screen_y = self.map_y - camera_y
-        if [screen_x, screen_y] not in locations:
-            screen_surface.blit(self.image, (screen_x, screen_y))
+        screen_surface.blit(self.image, (screen_x, screen_y))
 
 class Tree(pygame.sprite.Sprite):
     def __init__(self):
@@ -92,8 +87,7 @@ class Tree(pygame.sprite.Sprite):
     def draw(self, screen_surface, camera_x, camera_y):
         screen_x = self.map_x - camera_x
         screen_y = self.map_y - camera_y
-        if [screen_x, screen_y] not in locations:
-            screen_surface.blit(self.image, (screen_x, screen_y))
+        screen_surface.blit(self.image, (screen_x, screen_y))
 
 class Castle(pygame.sprite.Sprite):
     def __init__(self):
@@ -104,6 +98,7 @@ class Castle(pygame.sprite.Sprite):
         self.image = self.image.convert_alpha()
         self.image.fill((0,0,0,0))
         self.rect = self.image.get_rect()
+        self.locations = locations
 
         for i in castle:
             for x in range (castle[i]['pos_x'][0],castle[i]['pos_x'][1]):
@@ -113,13 +108,10 @@ class Castle(pygame.sprite.Sprite):
                     self.image.blit(pygame.image.load(castle[i]['img']), (surface_x, surface_y))
         self.map_x = randrange(int(0+WIDTH/2),int(map_width*tile_size-WIDTH/2-self.castle_width*tile_size),self.castle_width*tile_size)
         self.map_y = randrange(int(0+HEIGHT/2),int(map_height*tile_size-HEIGHT/2-self.castle_height*tile_size),self.castle_height*tile_size*2)
-        if [self.map_x,self.map_x] in locations:
-            'none'
-        else:
-            locations.append([self.map_x,self.map_x])
 
     def draw(self, screen_surface, camera_x, camera_y):
         screen_x = self.map_x - camera_x
         screen_y = self.map_y - camera_y
         screen_surface.blit(self.image, (screen_x, screen_y))
+        
         

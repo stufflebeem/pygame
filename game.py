@@ -20,19 +20,22 @@ game_surface = pygame.Surface((WIDTH, HEIGHT)).convert_alpha()
 
 # creates background
 grass = Tiles()
-fortress = Castle()
 
+# creates a castle
 
-# creates player robert centered in the map
-robert = Player(items, (map_width*tile_size)/2, (map_height*tile_size)/2, player_speed)
 
 # create a variety of houses on the map
-houses_group = pygame.sprite.Group()
+building_group = pygame.sprite.Group()
 for _ in range (5):
-     houses_group.add(House(brick_house))
+     building_group.add(House(brick_house))
 for _ in range (5):
-     houses_group.add(House(stone_house))
+     building_group.add(House(stone_house))
+building_group.add(Castle())
+
 tree = Tree() 
+
+# creates player robert centered in the map
+robert = Player(items, (map_width*tile_size)/2, (map_height*tile_size)/2, player_speed, building_group)
 
 while running:
     # poll for events
@@ -62,9 +65,8 @@ while running:
     # drawing
     grass.draw(game_surface, camera_x, camera_y)
     tree.draw(game_surface, camera_x, camera_y)
-    for house in houses_group:
-        house.draw(game_surface, camera_x, camera_y)
-    fortress.draw(game_surface, camera_x, camera_y)
+    for building in building_group:
+        building.draw(game_surface, camera_x, camera_y)
     robert.draw(game_surface)
     
     # flip() the display to put your work on the screen

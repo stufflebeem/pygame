@@ -14,13 +14,15 @@ weapon = "none"
 zoom_level = 2
 zoom_speed = 0.05
 player_speed = 1
+locations = []
+collision = False
+
 background = {
     'grass_1':{'img':"town/tiles/grass_green/tile_0000.png"},
     'grass_2':{'img':"town/tiles/grass_green/tile_0001.png"},
     'grass_3':{'img':"town/tiles/grass_green/tile_0002.png"},
     'grass_4':{'img':"town/tiles/grass_green/tile_0017.png"}
 }
-locations = []
 
 castle = {
     'gate_ground_top':{'img':"town/tiles/grass_path/tile_0025.png",'pos_x':(5,7),'pos_y':(6,7)},
@@ -61,11 +63,8 @@ castle = {
     'tower_right_top_bottom':{'img':"town/tiles/castle/tile_0121.png", 'pos_x':(9,11),'pos_y':(1,2)},
     'tower_right_top_bottom_right':{'img':"town/tiles/castle/tile_0122.png", 'pos_x':(11,12),'pos_y':(1,2)},
     'tower_left_wall_right':{'img':"town/tiles/castle/tile_0124.png", 'pos_x':(11,12),'pos_y':(2,8)},
-    
-
-
-
 }
+
 brick_house = {
     'wall':{'img':"town/tiles/building_brick/tile_0073.png", 'pos_x':(1,4),'pos_y':(2,4)},
     'wall_left':{'img':"town/tiles/building_brick/tile_0072.png",'pos_x':(0,1),'pos_y':(2,4)},

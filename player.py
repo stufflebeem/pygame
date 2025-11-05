@@ -20,29 +20,36 @@ def get_sprite(sheet, x, y, width, height):
 
 # creates a class of sprite Player for the user to control
 class Player():
-    def __init__(self, items, world_x, world_y, speed):
-        """world_x: the x coordinate of the sprite on the map
+    def __init__(self, items, world_x, world_y, speed, building_group,):
+        """items: list of items dictionary
+           world_x: the x coordinate of the sprite on the map
            world_y: the y coordinate of the sprite on the map
            speed: the number of pixles the sprite moves per frame
-           sprite_sheet: the sheet where the sprite is located
-           x: the x coordinate of the sprite on the sprite sheet
-           y: the y coordinate of the sprite on the sprite sheet"""
+           building_group: sprites in the buildings"""
+        pygame.sprite.Sprite.__init__(self)
         self.world_x = world_x
         self.world_y = world_y
         self.speed = speed
         self.items = items
+        self.building_group = building_group
+        self.image = pygame.Surface([tile_size,tile_size],pygame.SRCALPHA)
+        self.image = self.image.convert_alpha()
+        self.image.fill((0,0,0,0))
+        self.rect = self.image.get_rect(center=(self.world_x, self.world_y))
 
-    def draw(self, surface):
-        """surface: the screen on which the sprite is drawn
-           screen_x: the x coordinate of the sprite on the screen
-           screen_y: the y coordinate of the sprite on the screen"""
         # blits the player sprite onto
         blit_list = [model, pants,boots,shirt, hair, helmet, 
                      shield, weapon]
         for b in blit_list:
            sprite = self.items.load_items(b)
-           surface.blit(sprite["sprite"],(WIDTH/2,HEIGHT/2))
-    
+           self.image.blit(sprite["sprite"],(0,0))
+
+    def draw(self, surface):
+        """surface: the screen on which the sprite is drawn
+           screen_x: the x coordinate of the sprite on the screen
+           screen_y: the y coordinate of the sprite on the screen"""
+        surface.blit(self.image, (WIDTH/2, HEIGHT/2))
+        
     
     def keys(self):
         """takes keystroke inputs and changes the position of the sprite on the map relative to

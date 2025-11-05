@@ -2,6 +2,7 @@ import pygame
 from game_data import *
 from map import *
 
+# fuction to extracts sprites from spritesheet
 def get_sprite(sheet, x, y, width, height):
     """extracts sprites from a spritesheet where:
     sheet: loaded sprite image sheet
@@ -32,12 +33,14 @@ class Player():
         self.speed = speed
         self.items = items
         self.building_group = building_group
+
+        # creates a transparent surface for the sprite
         self.image = pygame.Surface([tile_size,tile_size],pygame.SRCALPHA)
         self.image = self.image.convert_alpha()
         self.image.fill((0,0,0,0))
         self.rect = self.image.get_rect(center=(self.world_x, self.world_y))
 
-        # blits the player sprite onto
+        # blits the player sprite onto transparant surface
         blit_list = [model, pants,boots,shirt, hair, helmet, 
                      shield, weapon]
         for b in blit_list:
@@ -45,31 +48,26 @@ class Player():
            self.image.blit(sprite["sprite"],(0,0))
 
     def draw(self, surface):
-        """surface: the screen on which the sprite is drawn
-           screen_x: the x coordinate of the sprite on the screen
-           screen_y: the y coordinate of the sprite on the screen"""
+        """surface: the screen on which the sprite is drawn"""
         surface.blit(self.image, (WIDTH/2, HEIGHT/2))
         
-    
+    # takes keystroke inputs and changes the position of the sprite on the map relative to the speed
     def keys(self):
-        """takes keystroke inputs and changes the position of the sprite on the map relative to
-        the speed"""
-        keys = pygame.key.get_pressed()
-        self.zoom_level = zoom_level
-        
-        self.map_width = map_width * tile_size
-        self.map_height = map_height * tile_size
 
+        # detects and saves a key input
+        keys = pygame.key.get_pressed()
+
+        # acts based on key input to move the sprite around the screen with WASD and arrows
         if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.world_x > 0 + WIDTH/(2*zoom_level)+10:
             self.world_x -= self.speed
-        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.world_x < self.map_width - WIDTH/(2*zoom_level)-10:
+        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.world_x < map_width * tile_size - WIDTH/(2*zoom_level)-10:
             self.world_x += self.speed
-        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.world_y < self.map_height - HEIGHT/(2*zoom_level)-10:
+        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.world_y < map_height * tile_size - HEIGHT/(2*zoom_level)-10:
             self.world_y += self.speed
         if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.world_y > 0 + HEIGHT/(2*zoom_level)+10:
             self.world_y -= self.speed
 
-            # changes the speed of the sprite based on LSHIFT and LCRTL inputs
+        # changes the speed of the sprite based on LSHIFT and LCRTL inputs
         if keys[pygame.K_LSHIFT]:
             self.speed += 0.1
         if keys[pygame.K_LCTRL]:
@@ -80,8 +78,10 @@ class Player():
 # creates a class of Items for the Player and others to wear and use
 class Items():
     def __init__(self, sprite_sheet):
+        """sprite_sheet: the png sheet with extractable sprites"""
         self.sprite_sheet = sprite_sheet
     def load_items(self, name):
+        """name: dictionary key name for what item is to be loaded"""
         data = item_data[name]
         x,y = data["pos"]
         sprite = get_sprite(self.sprite_sheet, x, y, 16, 16)

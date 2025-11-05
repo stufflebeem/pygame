@@ -21,10 +21,7 @@ game_surface = pygame.Surface((WIDTH, HEIGHT)).convert_alpha()
 # creates background
 grass = Tiles()
 
-# creates a castle
-
-
-# create a variety of houses on the map
+# create a variety of buildings on the map
 building_group = pygame.sprite.Group()
 for _ in range (5):
      building_group.add(House(brick_house))
@@ -32,10 +29,11 @@ for _ in range (5):
      building_group.add(House(stone_house))
 building_group.add(Castle())
 
+# create a border of trees around the map
 tree = Tree() 
 
-# creates player robert centered in the map
-robert = Player(items, (map_width*tile_size)/2, (map_height*tile_size)/2, player_speed, building_group)
+# creates player centered in the map
+player = Player(items, (map_width*tile_size)/2, (map_height*tile_size)/2, player_speed, building_group)
 
 while running:
     # poll for events
@@ -48,8 +46,8 @@ while running:
     # RENDER YOUR GAME HERE
 
     # creates a camera function to keep player centered and move other sprites and backgrounds
-    camera_x = robert.world_x - WIDTH/2
-    camera_y = robert.world_y - HEIGHT/2
+    camera_x = player.world_x - WIDTH/2
+    camera_y = player.world_y - HEIGHT/2
 
     # changes the surface size based on the zoom scale and blits it to the screen.
     zoomed_surface = pygame.transform.scale(game_surface, (int(WIDTH * zoom_level), int(HEIGHT * zoom_level)))
@@ -57,17 +55,14 @@ while running:
     screen.blit(zoomed_surface, zoom_rect)
     
     # functions
-    robert.keys()
-
-    # allows the zoom to be changed by using the + and - keys
-   
+    player.keys()
     
     # drawing
     grass.draw(game_surface, camera_x, camera_y)
     tree.draw(game_surface, camera_x, camera_y)
     for building in building_group:
         building.draw(game_surface, camera_x, camera_y)
-    robert.draw(game_surface)
+    player.draw(game_surface)
     
     # flip() the display to put your work on the screen
     pygame.display.flip()

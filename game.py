@@ -18,20 +18,21 @@ items = Items(sprite_sheet)
 # creates a surface that can be modified for zoom function
 game_surface = pygame.Surface((WIDTH, HEIGHT)).convert_alpha()
 
-# creates surface for house
-brick_house_surface = pygame.Surface((5*16, 4*16)).convert_alpha()
-
 # creates background
-grass = Tiles(background)
+grass = Tiles()
+fortress = Castle()
 
 
 # creates player robert centered in the map
-robert = Player(items, (grass.map_width*grass.tile_size)/2, (grass.map_height*grass.tile_size)/2, player_speed)
+robert = Player(items, (map_width*tile_size)/2, (map_height*tile_size)/2, player_speed)
 
 # create a variety of houses on the map
-house_group = pygame.sprite.Group()
-
-brick_houses = House(brick_house_surface, stone_house)
+houses_group = pygame.sprite.Group()
+for _ in range (5):
+     houses_group.add(House(brick_house))
+for _ in range (5):
+     houses_group.add(House(stone_house))
+tree = Tree() 
 
 while running:
     # poll for events
@@ -53,19 +54,19 @@ while running:
     screen.blit(zoomed_surface, zoom_rect)
     
     # functions
-    robert.keys(grass)
+    robert.keys()
 
     # allows the zoom to be changed by using the + and - keys
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_EQUALS]:
-            zoom_level += zoom_speed
-    if keys[pygame.K_MINUS]:
-           zoom_level -= zoom_speed
+   
     
     # drawing
     grass.draw(game_surface, camera_x, camera_y)
+    tree.draw(game_surface, camera_x, camera_y)
+    for house in houses_group:
+        house.draw(game_surface, camera_x, camera_y)
+    fortress.draw(game_surface, camera_x, camera_y)
     robert.draw(game_surface)
-    brick_houses.draw(brick_house_surface, game_surface, camera_x, camera_y)
+    
     # flip() the display to put your work on the screen
     pygame.display.flip()
 

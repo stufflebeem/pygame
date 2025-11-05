@@ -42,31 +42,33 @@ class Player():
         for b in blit_list:
            sprite = self.items.load_items(b)
            surface.blit(sprite["sprite"],(WIDTH/2,HEIGHT/2))
-
-    def keys(self, tiles):
+    
+    
+    def keys(self):
         """takes keystroke inputs and changes the position of the sprite on the map relative to
         the speed"""
         keys = pygame.key.get_pressed()
+        self.zoom_level = zoom_level
+        
+        self.map_width = map_width * tile_size
+        self.map_height = map_height * tile_size
 
-        map_width = tiles.map_width * tiles.tile_size
-        map_height = tiles.map_height * tiles.tile_size
-
-        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.world_x > 0 + WIDTH/2:
+        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.world_x > 0 + WIDTH/(2*zoom_level)+10:
             self.world_x -= self.speed
-        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.world_x < map_width - WIDTH/2:
+        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.world_x < self.map_width - WIDTH/(2*zoom_level)-10:
             self.world_x += self.speed
-        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.world_y < map_height - HEIGHT/2:
+        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.world_y < self.map_height - HEIGHT/(2*zoom_level)-10:
             self.world_y += self.speed
-        if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.world_y > 0 + HEIGHT/2:
+        if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.world_y > 0 + HEIGHT/(2*zoom_level)+10:
             self.world_y -= self.speed
 
-        """changes the speed of the sprite based on LSHIFT and LCRTL inputs"""
-        keys = pygame.key.get_pressed()
+            # changes the speed of the sprite based on LSHIFT and LCRTL inputs
         if keys[pygame.K_LSHIFT]:
             self.speed += 0.1
         if keys[pygame.K_LCTRL]:
             self.speed -= 0.1
         self.speed = abs(self.speed)
+        
 
 # creates a class of Items for the Player and others to wear and use
 class Items():

@@ -1,7 +1,8 @@
 WIDTH = 800
 HEIGHT = 600
-map_width = 80
+map_width = 120
 map_height = 80
+tile_size = 16
 model = "model_1"
 pants = "pants_1"
 boots = "boots_1"
@@ -13,8 +14,27 @@ weapon = "none"
 zoom_level = 2
 zoom_speed = 0.05
 player_speed = 1
-background = "town/tiles/grass_green/tile_0001.png"
+background = {
+    'grass_1':{'img':"town/tiles/grass_green/tile_0000.png"},
+    'grass_2':{'img':"town/tiles/grass_green/tile_0001.png"},
+    'grass_3':{'img':"town/tiles/grass_green/tile_0002.png"},
+    'grass_4':{'img':"town/tiles/grass_green/tile_0017.png"}
+}
 
+castle = {
+    'gate_top_left':{'img':"town/tiles/castle/tile_0113.png", 'pos_x':(6,7),'pos_y':(8,9)},
+    'gate_top_right':{'img':"town/tiles/castle/tile_0114.png", 'pos_x':(7,8),'pos_y':(8,9)},
+    'gate_bottom_left':{'img':"town/tiles/castle/tile_0123.png", 'pos_x':(6,7),'pos_y':(9,10)},
+    'gate_bottom_right':{'img':"town/tiles/castle/tile_0124.png", 'pos_x':(7,8),'pos_y':(9,10)},
+    'keep_wall':{'img':"town/tiles/castle/tile_0126.png", 'pos_x':(5,9),'pos_y':(6,8)},
+    'keep_wall_lower_left':{'img':"town/tiles/castle/tile_0126.png", 'pos_x':(5,6),'pos_y':(8,10)},
+    'keep_wall_lower_right':{'img':"town/tiles/castle/tile_0126.png", 'pos_x':(8,9),'pos_y':(8,10)},
+    'keep_wall_left':{'img':"town/tiles/castle/tile_0124.png", 'pos_x':(4,5),'pos_y':(6,10)},
+    'keep_wall_right':{'img':"town/tiles/castle/tile_0123.png", 'pos_x':(9,10),'pos_y':(6,10)},
+
+
+
+}
 brick_house = {
     'wall':{'img':"town/tiles/building_brick/tile_0073.png", 'pos_x':(1,4),'pos_y':(2,4)},
     'wall_left':{'img':"town/tiles/building_brick/tile_0072.png",'pos_x':(0,1),'pos_y':(2,4)},
@@ -28,6 +48,15 @@ brick_house = {
     'roof_right_corner':{'img':"town/tiles/roof_stone/tile_0050.png",'pos_x':(4,5),'pos_y':(0,1)},
     'roof_arch':{'img':"town/tiles/roof_stone/tile_0063.png",'pos_x':(2,3),'pos_y':(1,2)}
 }
+
+trees = {
+    'tree_center':{'img':"town/tiles/trees_green/tile_0019.png"},
+    'tree_bottom':{'img':"town/tiles/trees_green/tile_0031.png"},
+    'tree_top':{'img':"town/tiles/trees_green/tile_0007.png"},
+    'tree_left':{'img':"town/tiles/trees_green/tile_0020.png"},
+    'tree_right':{'img':"town/tiles/trees_green/tile_0018.png"}
+}
+
 stone_house = {
     'wall':{'img':"town/tiles/building_stone/tile_0077.png", 'pos_x':(1,4),'pos_y':(2,4)},
     'wall_left':{'img':"town/tiles/building_stone/tile_0076.png",'pos_x':(0,1),'pos_y':(2,4)},

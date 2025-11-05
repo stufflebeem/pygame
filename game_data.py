@@ -20,17 +20,48 @@ background = {
     'grass_3':{'img':"town/tiles/grass_green/tile_0002.png"},
     'grass_4':{'img':"town/tiles/grass_green/tile_0017.png"}
 }
+locations = []
 
 castle = {
-    'gate_top_left':{'img':"town/tiles/castle/tile_0113.png", 'pos_x':(6,7),'pos_y':(8,9)},
-    'gate_top_right':{'img':"town/tiles/castle/tile_0114.png", 'pos_x':(7,8),'pos_y':(8,9)},
-    'gate_bottom_left':{'img':"town/tiles/castle/tile_0123.png", 'pos_x':(6,7),'pos_y':(9,10)},
-    'gate_bottom_right':{'img':"town/tiles/castle/tile_0124.png", 'pos_x':(7,8),'pos_y':(9,10)},
-    'keep_wall':{'img':"town/tiles/castle/tile_0126.png", 'pos_x':(5,9),'pos_y':(6,8)},
-    'keep_wall_lower_left':{'img':"town/tiles/castle/tile_0126.png", 'pos_x':(5,6),'pos_y':(8,10)},
-    'keep_wall_lower_right':{'img':"town/tiles/castle/tile_0126.png", 'pos_x':(8,9),'pos_y':(8,10)},
-    'keep_wall_left':{'img':"town/tiles/castle/tile_0124.png", 'pos_x':(4,5),'pos_y':(6,10)},
-    'keep_wall_right':{'img':"town/tiles/castle/tile_0123.png", 'pos_x':(9,10),'pos_y':(6,10)},
+    'gate_ground_top':{'img':"town/tiles/grass_path/tile_0025.png",'pos_x':(5,7),'pos_y':(6,7)},
+    'gate_ground_bottom':{'img':"town/tiles/grass_path/tile_0037.png",'pos_x':(5,7),'pos_y':(7,8)},
+    'gate_top_left':{'img':"town/tiles/castle/tile_0111.png", 'pos_x':(5,6),'pos_y':(6,7)},
+    'gate_top_right':{'img':"town/tiles/castle/tile_0112.png", 'pos_x':(6,7),'pos_y':(6,7)},
+    'gate_bottom_left':{'img':"town/tiles/castle/tile_0123.png", 'pos_x':(5,6),'pos_y':(7,8)},
+    'gate_bottom_right':{'img':"town/tiles/castle/tile_0124.png", 'pos_x':(6,7),'pos_y':(7,8)},
+    'keep_wall':{'img':"town/tiles/castle/tile_0126.png", 'pos_x':(4,8),'pos_y':(5,6)},
+    'tower_left_wall':{'img':"town/tiles/castle/tile_0126.png", 'pos_x':(0,4),'pos_y':(2,8)},
+    'tower_right_wall':{'img':"town/tiles/castle/tile_0126.png", 'pos_x':(8,12),'pos_y':(2,8)},
+
+    'keep_wall_lower_left':{'img':"town/tiles/castle/tile_0126.png", 'pos_x':(4,5),'pos_y':(6,8)},
+    'keep_wall_lower_right':{'img':"town/tiles/castle/tile_0126.png", 'pos_x':(7,8),'pos_y':(6,8)},
+    'keep_wall_left':{'img':"town/tiles/castle/tile_0124.png", 'pos_x':(3,4),'pos_y':(2,8)},
+    'keep_wall_right':{'img':"town/tiles/castle/tile_0123.png", 'pos_x':(8,9),'pos_y':(2,8)},
+
+    'keep_top_top_left':{'img':"town/tiles/castle/tile_0096.png", 'pos_x':(4,5),'pos_y':(3,4)},
+    'keep_top_top':{'img':"town/tiles/castle/tile_0097.png", 'pos_x':(5,7),'pos_y':(3,4)},
+    'keep_top_top_right':{'img':"town/tiles/castle/tile_0098.png", 'pos_x':(7,8),'pos_y':(3,4)},
+    'keep_top_bottom_left':{'img':"town/tiles/castle/tile_0120.png", 'pos_x':(4,5),'pos_y':(4,5)},
+    'keep_top_bottom':{'img':"town/tiles/castle/tile_0121.png", 'pos_x':(5,7),'pos_y':(4,5)},
+    'keep_top_bottom_right':{'img':"town/tiles/castle/tile_0122.png", 'pos_x':(7,8),'pos_y':(4,5)},
+
+    'tower_left_top_top_left':{'img':"town/tiles/castle/tile_0096.png", 'pos_x':(0,1),'pos_y':(0,1)},
+    'tower_left_top_top':{'img':"town/tiles/castle/tile_0097.png", 'pos_x':(1,3),'pos_y':(0,1)},
+    'tower_left_top_top_right':{'img':"town/tiles/castle/tile_0098.png", 'pos_x':(3,4),'pos_y':(0,1)},
+    'tower_left_top_bottom_left':{'img':"town/tiles/castle/tile_0120.png", 'pos_x':(0,1),'pos_y':(1,2)},
+    'tower_left_top_bottom':{'img':"town/tiles/castle/tile_0121.png", 'pos_x':(1,3),'pos_y':(1,2)},
+    'tower_left_top_bottom_right':{'img':"town/tiles/castle/tile_0122.png", 'pos_x':(3,4),'pos_y':(1,2)},
+    'tower_left_wall_left':{'img':"town/tiles/castle/tile_0123.png", 'pos_x':(0,1),'pos_y':(2,8)},
+    
+
+    'tower_right_top_top_left':{'img':"town/tiles/castle/tile_0096.png", 'pos_x':(8,9),'pos_y':(0,1)},
+    'tower_right_top_top':{'img':"town/tiles/castle/tile_0097.png", 'pos_x':(9,11),'pos_y':(0,1)},
+    'tower_right_top_top_right':{'img':"town/tiles/castle/tile_0098.png", 'pos_x':(11,12),'pos_y':(0,1)},
+    'tower_right_top_bottom_left':{'img':"town/tiles/castle/tile_0120.png", 'pos_x':(8,9),'pos_y':(1,2)},
+    'tower_right_top_bottom':{'img':"town/tiles/castle/tile_0121.png", 'pos_x':(9,11),'pos_y':(1,2)},
+    'tower_right_top_bottom_right':{'img':"town/tiles/castle/tile_0122.png", 'pos_x':(11,12),'pos_y':(1,2)},
+    'tower_left_wall_right':{'img':"town/tiles/castle/tile_0124.png", 'pos_x':(11,12),'pos_y':(2,8)},
+    
 
 
 

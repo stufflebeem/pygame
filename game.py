@@ -2,6 +2,7 @@ import pygame
 from game_data import *
 from player import *
 from map import *
+from villager import *
 
 # pygame setup
 pygame.init()
@@ -26,10 +27,16 @@ tree = Tree()
 
 # create a variety of buildings on the map
 building_group = pygame.sprite.Group()
-create_buildings(building_group)
+villager_group = pygame.sprite.Group()
+create_buildings(building_group, villager_group, items, player_speed)
 
 # creates player centered in the map
 player = Player(items, player_speed, building_group)
+player_group = pygame.sprite.Group()
+player_group.add(player)
+
+
+
 
 while running:
     # poll for events
@@ -42,8 +49,8 @@ while running:
     # RENDER YOUR GAME HERE
 
     # creates a camera function to keep player centered and move other sprites and backgrounds
-    camera_x = player.world_x - WIDTH/2
-    camera_y = player.world_y - HEIGHT/2
+    camera_x = player.map_x - WIDTH/2
+    camera_y = player.map_y - HEIGHT/2
 
     # changes the surface size based on the zoom scale and blits it to the screen.
     zoomed_surface = pygame.transform.scale(game_surface, (int(WIDTH * zoom_level), int(HEIGHT * zoom_level)))
@@ -52,24 +59,22 @@ while running:
     
     # functions
     player.keys()
-    
-    # checkin for collisions
-    collided_sprites = pygame.sprite.spritecollide(player, building_group, False)
-    if collided_sprites:
-        print("collision")
-
 
     # drawing
     grass.draw(game_surface, camera_x, camera_y)
     tree.draw(game_surface, camera_x, camera_y)
     for building in building_group:
         building.draw(game_surface, camera_x, camera_y)
+    for villager in villager_group:
+        villager.draw(game_surface, camera_x, camera_y)
+        villager.update(player_group)
     player.draw(game_surface)
     
     # flip() the display to put your work on the screen
     pygame.display.flip()
     
     # limits FPS to 60
-    clock.tick(60)  
+    clock.tick(60)
+    ticks += 1/60  
 
 pygame.quit()

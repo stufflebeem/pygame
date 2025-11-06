@@ -2,6 +2,7 @@ import pygame
 from game_data import *
 from random import *
 from player import *
+from villager import *
 
 # Creates a class called tiles to create maps and backgrounds
 class Tiles():
@@ -141,10 +142,16 @@ class Castle(pygame.sprite.Sprite):
         screen_y = self.map_y - camera_y
         screen_surface.blit(self.image, (screen_x, screen_y))
 
-def create_buildings(building_group):
+def create_buildings(building_group, villager_group, items, speed):
     building_group.add(Castle())
 
-    while len(building_group) < 11:
+    while len(building_group) < num_houses:
         new_house = House(brick_house)
         if not pygame.sprite.spritecollide(new_house, building_group, False):
             building_group.add(new_house)
+        num = randint(2,3)
+        for n in range(1,num):
+            new_villager = Villager(items, speed, building_group, new_house.map_x, new_house.map_y+(new_house.house_height+1)*tile_size)
+            if n == 2:
+                new_villager.map_x += tile_size
+            villager_group.add(new_villager)

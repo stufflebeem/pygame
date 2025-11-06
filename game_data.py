@@ -4,15 +4,19 @@ map_width = 120
 map_height = 80
 tile_size = 16
 model = "model_1"
-pants = "pants_1"
-boots = "boots_1"
-shirt = "shirt_1"
+pants = "none"
+boots = "none"
+shirt = "none"
 hair = "hair_1"
-helmet = "helmet_1"
-shield = "shield_1"
+helmet = "none"
+shield = "none"
 weapon = "none"
-zoom_level = 2
+ticks = 0
+zoom_level = 3
 player_speed = 1.5
+female_hair = [2, 6, 10, 11, 12, 14, 15, 16, 34, 38, 42, 43, 44, 46, 47, 48, 66, 70, 71, 72]
+female_shirt = [25, 29, 33, 85, 89, 93]
+num_houses =12
 
 background = {
     'grass_1':{'img':"town/tiles/grass_green/tile_0000.png"},
@@ -108,6 +112,10 @@ item_data = {
     "model_4":{"pos":(17,0),"category":"model",'stats': {'defense': 0, 'speed': 0}},
     "model_5":{"pos":(17,17),"category":"model",'stats': {'defense': 0, 'speed': 0}},
     "model_6":{"pos":(17,34),"category":"model",'stats': {'defense': 0, 'speed': 0}},
+
+    #orc
+    "orc_1":{"pos":(0,51),"category":"model",'stats': {'defense': 0, 'speed': 0}},
+    "orc_2":{"pos":(17,51),"category":"model",'stats': {'defense': 0, 'speed': 0}},
 
     #hair
     "hair_1":{'pos': (323, 0), 'category': 'hair', 'stats': {'defense': 0, 'speed': 0}},
@@ -232,18 +240,25 @@ item_data = {
     # pants
     "pants_1":  {"pos": (51, 0),   "category": "pants", "stats": {"defense": 1, "speed": 0}},
     "pants_2":  {"pos": (51, 17),  "category": "pants", "stats": {"defense": 1, "speed": 0}},
-    "pants_3":   {"pos": (51, 34),  "category": "pants", "stats": {"defense": 5, "speed": -1}},
-    "pants_4":{"pos": (51, 51),  "category": "pants", "stats": {"defense": 2, "speed": 1}},
+    "pants_3":   {"pos": (51, 34),  "category": "pants", "stats": {"defense": 1, "speed": 0}},
+    "pants_4":{"pos": (51, 51),  "category": "pants", "stats": {"defense": 1, "speed": 1}},
     "pants_5":    {"pos": (51, 85),  "category": "pants", "stats": {"defense": 1, "speed": 0}},
     "pants_6":   {"pos": (51, 102), "category": "pants", "stats": {"defense": 1, "speed": 0}},
     "pants_7": {"pos": (51, 119), "category": "pants", "stats": {"defense": 1, "speed": 0}},
     "pants_8":  {"pos": (51, 136), "category": "pants", "stats": {"defense": 1, "speed": 0}},
 
-    # dresses
+    # dresses bottom
     "dress_1":   {"pos": (51, 68),  "category": "dress", "stats": {"defense": 1, "speed": 1}},
     "dress_2":  {"pos": (51, 170), "category": "dress", "stats": {"defense": 1, "speed": 0}},
     "dress_3":    {"pos": (68, 68),  "category": "dress", "stats": {"defense": 1, "speed": 0}},
     "dress_4": {"pos": (51, 170), "category": "dress", "stats": {"defense": 1, "speed": 0}},
+    
+
+    # dresses top
+    "dress_top_1": {"pos": (136, 34), "category": "dress_top", "stats": {"defense": 1, "speed": 0}},
+    "dress_top_2": {"pos": (136, 102), "category": "dress_top", "stats": {"defense": 1, "speed": 0}},
+    "dress_top_3": {"pos": (136, 170), "category": "dress_top", "stats": {"defense": 1, "speed": 0}},
+    "dress_top_4": {"pos": (238, 0), "category": "dress_top", "stats": {"defense": 1, "speed": 0}},
 
     # boots
     "boots_1":  {"pos": (68, 0),   "category": "boots", "stats": {"defense": 1, "speed": 0}},
@@ -280,15 +295,12 @@ item_data = {
     "shirt_22": {"pos": (119, 170), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_23": {"pos": (136, 0), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_24": {"pos": (136, 17), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
-    "shirt_25": {"pos": (136, 34), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_26": {"pos": (136, 51), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_27": {"pos": (136, 68), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_28": {"pos": (136, 85), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
-    "shirt_29": {"pos": (136, 102), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_30": {"pos": (136, 119), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_31": {"pos": (136, 136), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_32": {"pos": (136, 153), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
-    "shirt_33": {"pos": (136, 170), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_34": {"pos": (153, 0), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_35": {"pos": (153, 17), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_36": {"pos": (153, 34), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
@@ -340,15 +352,12 @@ item_data = {
     "shirt_82": {"pos": (221, 68), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_83": {"pos": (221, 85), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_84": {"pos": (221, 102), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
-    "shirt_85": {"pos": (221, 119), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_86": {"pos": (221, 136), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_87": {"pos": (221, 153), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_88": {"pos": (221, 170), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
-    "shirt_89": {"pos": (238, 0), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_90": {"pos": (238, 17), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_91": {"pos": (238, 34), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_92": {"pos": (238, 51), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
-    "shirt_93": {"pos": (238, 68), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_94": {"pos": (238, 85), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_95": {"pos": (238, 102), "category": "shirt", "stats": {"defense": 1, "speed": 0}},
     "shirt_96": {"pos": (238, 119), "category": "shirt", "stats": {"defense": 1, "speed": 0}},

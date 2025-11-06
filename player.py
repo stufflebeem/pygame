@@ -1,6 +1,7 @@
 import pygame
 from game_data import *
 from map import *
+from villager import *
 
 # fuction to extracts sprites from spritesheet
 def get_sprite(sheet, x, y, width, height):
@@ -26,20 +27,22 @@ class Player(pygame.sprite.Sprite):
            speed: the number of pixles the sprite moves per frame
            building_group: sprites in the buildings"""
         pygame.sprite.Sprite.__init__(self)
-        self.world_x = (map_width*tile_size)/2
-        self.world_y = (map_height*tile_size)/2
+        self.map_x = (map_width*tile_size)/2
+        self.map_y = (map_height*tile_size)/2
         self.speed = speed
         self.items = items
         self.building_group = building_group
+        self.last_dx = 0
+        self.last_dy = 0
 
         # creates a transparent surface for the sprite
         self.image = pygame.Surface([tile_size,tile_size],pygame.SRCALPHA)
         self.image = self.image.convert_alpha()
         self.image.fill((0,0,0,0))
-        self.rect = self.image.get_rect(center=(self.world_x, self.world_y))
+        self.rect = self.image.get_rect(topleft=(self.map_x, self.map_y))
 
         # blits the player sprite onto transparant surface
-        blit_list = [model, pants,boots,shirt, hair, helmet, 
+        blit_list = [model, pants, boots, shirt, hair, helmet, 
                      shield, weapon]
         for b in blit_list:
            sprite = self.items.load_items(b)
@@ -47,9 +50,9 @@ class Player(pygame.sprite.Sprite):
 
         # adjusts spawn location in case of spawning in building
         if pygame.sprite.spritecollide(self, self.building_group, False):
-            self.world_x += 100
-            self.world_y += 100
-            self.rect.center = (self.world_x, self.world_y)
+            self.map_x += 100
+            self.map_y += 100
+            self.rect.topleft = (self.map_x, self.map_y)
 
     def draw(self, surface):
         """surface: the screen on which the sprite is drawn"""
@@ -62,42 +65,47 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         dx = 0
         dy = 0
+        self.last_dx = 0
+        self.last_dy = 0
+        
 
         # acts based on key input to move the sprite around the screen with WASD and arrows
-        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.world_x > 0 + WIDTH/(2*zoom_level)+10:
+        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.map_x > 0 + WIDTH/4+10:
             if (keys[pygame.K_LSHIFT]):
                 dx -= self.speed+1
             else:
                 dx -= self.speed
-        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.world_x < map_width * tile_size - WIDTH/(2*zoom_level)-10:
+        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.map_x < map_width * tile_size - WIDTH/4-10:
             if (keys[pygame.K_LSHIFT]):
                 dx += self.speed+1
             else:
                 dx += self.speed
-        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.world_y < map_height * tile_size - HEIGHT/(2*zoom_level)-10:
+        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.map_y < map_height * tile_size - HEIGHT/4-10:
             if (keys[pygame.K_LSHIFT]):
                 dy += self.speed+1
             else:
                 dy += self.speed
-        if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.world_y > 0 + HEIGHT/(2*zoom_level)+10:
+        if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.map_y > 0 + HEIGHT/4+10:
             if (keys[pygame.K_LSHIFT]):
                dy -= self.speed+1
             else:
                 dy -= self.speed
-
-        # checks ability to move in the x direction
-        self.world_x += dx
-        self.rect.center = (self.world_x, self.world_y)
+        
+        # checks ability to move in the x direction based on collision
+        self.map_x += dx
+        self.rect.topleft = (self.map_x, self.map_y)
         if pygame.sprite.spritecollide(self, self.building_group, False):
-            self.world_x -= dx
-            self.rect.center = (self.world_x, self.world_y)
+            self.map_x -= dx
+            self.last_dx = dx
+            self.rect.topleft = (self.map_x, self.map_y)
 
-        # checks ability to move in the y direction
-        self.world_y += dy
-        self.rect.center = (self.world_x, self.world_y)
+        # checks ability to move in the y direction based on collision
+        self.map_y += dy
+        self.rect.topleft = (self.map_x, self.map_y)
         if pygame.sprite.spritecollide(self, self.building_group, False):
-            self.world_y -= dy
-            self.rect.center = (self.world_x, self.world_y)
+            self.map_y -= dy
+            self.last_dy = dy
+            self.rect.topleft = (self.map_x, self.map_y)
         
 
 # creates a class of Items for the Player and others to wear and use

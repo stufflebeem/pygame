@@ -3,6 +3,8 @@ from game_data import *
 from player import *
 from map import *
 from villager import *
+from guard import *
+from user_interface import *
 
 # pygame setup
 pygame.init()
@@ -28,15 +30,16 @@ tree = Tree()
 # create a variety of buildings on the map
 building_group = pygame.sprite.Group()
 villager_group = pygame.sprite.Group()
-create_buildings(building_group, villager_group, items, player_speed)
+guard_group = pygame.sprite.Group()
+create_buildings(building_group, villager_group, guard_group, items, player_speed)
 
 # creates player centered in the map
-player = Player(items, player_speed, building_group)
+player = Player(items, player_speed, building_group, villager_group)
 player_group = pygame.sprite.Group()
 player_group.add(player)
 
-
-
+start = Start()
+score = Score()
 
 while running:
     # poll for events
@@ -67,14 +70,25 @@ while running:
         building.draw(game_surface, camera_x, camera_y)
     for villager in villager_group:
         villager.draw(game_surface, camera_x, camera_y)
-        villager.update(player_group)
+        villager.update(player_group, villager_group)
+    for guard in guard_group:
+        guard.draw(game_surface, camera_x, camera_y)
+        guard.update(player_group, guard_group)
     player.draw(game_surface)
+    player.update()
+
+    # title
+    score.draw(screen)
+    score.update_score(player.score)
+    start.update()
+    start.draw(screen)
+    
+    
     
     # flip() the display to put your work on the screen
     pygame.display.flip()
     
     # limits FPS to 60
     clock.tick(60)
-    ticks += 1/60  
 
 pygame.quit()

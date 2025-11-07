@@ -5,8 +5,8 @@ from player import *
 from random import *
 
 # creates a class of sprite Player for the user to control
-class Villager(pygame.sprite.Sprite):
-    def __init__(self, items, speed, building_group, map_x, map_y):
+class Guard(pygame.sprite.Sprite):
+    def __init__(self, items, speed, building_group, villager_group, map_x, map_y):
         """items: list of items dictionary
            speed: the number of pixles the sprite moves per frame
            building_group: sprites in the buildings"""
@@ -16,6 +16,7 @@ class Villager(pygame.sprite.Sprite):
         self.speed = speed
         self.items = items
         self.building_group = building_group
+        self.villager_group = villager_group
         self.dx = 0
         self.dy = 0
 
@@ -25,35 +26,16 @@ class Villager(pygame.sprite.Sprite):
         self.image.fill((0,0,0,0))
         self.rect = self.image.get_rect(topleft=(self.map_x, self.map_y))
 
-        # villager items
+        # guard items
         model = randint(1,6)
-        villager_model = (f"model_{model}")
-        hair = randint(1,80)
-
-        # function assigns gender based on hair
-        villager_hair = (f"hair_{hair}")
-        if hair in female_hair:
-            dress = randint(1,4)
-            villager_dress = (f"dress_{dress}")
-            villager_dress_top = (f"dress_top_{dress}")
-            villager_shirt = 'none'
-            villager_pants = 'none'
-            villager_boots = 'none'
-        else:
-            villager_dress = 'none'
-            villager_dress_top = 'none'
-            pants = randint(1,8)
-            villager_pants = (f"pants_{pants}")
-            boots = randint(1,8)
-            villager_boots = (f"boots_{boots}")
-            shirt = randint(1,120)
-            if shirt in female_shirt:
-                villager_shirt = 'none'
-            else:
-                villager_shirt = (f"shirt_{shirt}")
+        guard_model = (f"model_{model}")
+        guard_shirt = ("shirt_75")
+        guard_pants = ("pants_3")
+        guard_boots = ("boots_3")
+        guard_helmet = ("helmet_1")
 
         # blits the player sprite onto transparant surface
-        blit_list = [villager_model, villager_hair, villager_dress, villager_dress_top, villager_pants,villager_boots, villager_shirt]
+        blit_list = [guard_model,  guard_shirt, guard_pants, guard_boots, guard_helmet]
         for b in blit_list:
            sprite = self.items.load_items(b)
            self.image.blit(sprite["sprite"],(0,0))
@@ -64,15 +46,15 @@ class Villager(pygame.sprite.Sprite):
             self.map_y += 100
             self.rect.topleft = (self.map_x, self.map_y)
         
-    # needs to create an automatically updating system for villagers to move and ineract with the world around them
-    def update(self, player_group, villager_group):
+    # needs to create an automatically updating system for guards to move and ineract with the world around them
+    def update(self, player_group, guard_group):
         """player_group: player_group"""
         self.player_group = player_group
-        self.villager_group = villager_group
+        self.guard_group = guard_group
         self.rect.topleft = (self.map_x, self.map_y)
         player = self.player_group.sprites()[0]
 
-        # creates movement at random intervals, every 10 seconds a villager should move at least once
+        # creates movement at random intervals, every 10 seconds a guard should move at least once
         movement = randint(1,600)
         if movement == 1:
             if self.dx == 0:
@@ -93,7 +75,7 @@ class Villager(pygame.sprite.Sprite):
             else:
                 self.dy = 0
         
-        # stops villagers after around 2 seconds of movement
+        # stops guards after around 2 seconds of movement
         if movement > 580:
             self.dx = 0
             self.dy = 0
@@ -109,8 +91,8 @@ class Villager(pygame.sprite.Sprite):
             self.map_y += self.dy
             self.rect.topleft = (self.map_x, self.map_y)
         else:
-            # detects collisions between villager and other villagers
-            for other in self.villager_group:
+            # detects collisions between guard and other guards
+            for other in self.guard_group:
                 if other != self and self.rect.colliderect(other.rect):
                     self.dx = -self.dx
                     self.dy = -self.dy
@@ -118,7 +100,7 @@ class Villager(pygame.sprite.Sprite):
                     self.map_y += self.dy
                     self.rect.topleft = (self.map_x, self.map_y)
 
-            # detects collisions between villager and player
+            # detects collisions between guard and player
             if pygame.sprite.spritecollide(self, self.player_group, False):
                     self.dx += player.dx
                     self.dy += player.dy
@@ -126,7 +108,7 @@ class Villager(pygame.sprite.Sprite):
                     self.map_y += self.dy
                     self.rect.topleft = (self.map_x, self.map_y)
        
-        # defines world borders for villagers
+        # defines world borders for guards
         if self.map_x < 0 + WIDTH/4+10:
             self.dx = -self.dx
         if self.map_x > map_width * tile_size - WIDTH/4-10:

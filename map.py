@@ -1,13 +1,13 @@
 import pygame
-from game_data import *
 from random import *
-from player import *
 from villager import *
 from guard import *
+from items import *
+
 # Creates a class called tiles to create maps and backgrounds
 class Tiles():
     def __init__(self):
-        
+
         # loads three different types of grass for the background
         self.grass_1 = pygame.image.load(background['grass_1']['img']).convert_alpha()
         self.grass_2 = pygame.image.load(background['grass_2']['img']).convert_alpha()
@@ -40,6 +40,7 @@ class Tiles():
 # Creates a class called house containing background homes
 class House(pygame.sprite.Sprite):
     def __init__(self,type):
+
         """type: brick or stone houses"""
         pygame.sprite.Sprite.__init__(self)
         self.type = type
@@ -62,6 +63,7 @@ class House(pygame.sprite.Sprite):
         self.rect.topleft = (self.map_x, self.map_y)
 
     def draw(self, screen_surface, camera_x, camera_y):
+
         """screen_surface: game surface for the background to be blitted onto
            camera_x: camera x position on the visible screen
            camera_y: camera y position on the visible screen"""
@@ -104,6 +106,7 @@ class Tree(pygame.sprite.Sprite):
         self.map_y = 0
 
     def draw(self, screen_surface, camera_x, camera_y):
+
         """screen_surface: game surface for the background to be blitted onto
            camera_x: camera x position on the visible screen
            camera_y: camera y position on the visible screen"""
@@ -135,6 +138,7 @@ class Castle(pygame.sprite.Sprite):
         self.rect.topleft = (self.map_x,self.map_y)
 
     def draw(self, screen_surface, camera_x, camera_y):
+        
         """screen_surface: game surface for the background to be blitted onto
            camera_x: camera x position on the visible screen
            camera_y: camera y position on the visible screen"""
@@ -142,22 +146,30 @@ class Castle(pygame.sprite.Sprite):
         screen_y = self.map_y - camera_y
         screen_surface.blit(self.image, (screen_x, screen_y))
 
-def create_buildings(building_group, villager_group, guard_group, items, speed):
+def create_buildings(building_group, villager_group, guard_group, speed):
+
+    # creates a castle and guards
     castle = Castle()
     building_group.add(castle)
     num = 5
     for n in range(1,num+1):
-        new_guard = Guard(items, speed, building_group,villager_group, castle.map_x, castle.map_y+(castle.castle_height+1)*tile_size)
+        new_guard = Guard(speed, building_group,villager_group, castle.map_x, castle.map_y+(castle.castle_height+1)*tile_size)
         new_guard.map_x += tile_size * n
         guard_group.add(new_guard)
 
+    # creates houses and villagers
     while len(building_group) < num_houses:
         new_house = House(brick_house)
-        if not pygame.sprite.spritecollide(new_house, building_group, False):
+        if not pygame.sprite.spritecollide(new_house, building_group, False) and not pygame.sprite.spritecollide(new_house, guard_group, False):
             building_group.add(new_house)
         num = randint(2,3)
         for n in range(1,num):
-            new_villager = Villager(items, speed, building_group, new_house.map_x, new_house.map_y+(new_house.house_height+1)*tile_size)
+            new_villager = Villager(speed, building_group, new_house.map_x, new_house.map_y+(new_house.house_height+1)*tile_size)
             if n == 2:
                 new_villager.map_x += tile_size
             villager_group.add(new_villager)
+def create_items(item_group, building_group, villager_group, guard_group, player_group):
+    num = 10
+    for _ in range(num):
+        new_item =Items(item_group, building_group, villager_group, guard_group, player_group)
+        item_group.add(new_item)

@@ -1,9 +1,6 @@
 import pygame
-from game_data import *
 from player import *
 from map import *
-from villager import *
-from guard import *
 from user_interface import *
 
 # pygame setup
@@ -16,7 +13,6 @@ pygame.mouse.set_visible(False)
 
 # creates spritesheet to gather sprites
 sprite_sheet = pygame.image.load('characters/sprites/roguelikeChar_transparent.png').convert_alpha()
-items = Items(sprite_sheet)
 
 # creates a surface that can be modified for zoom function
 game_surface = pygame.Surface((WIDTH, HEIGHT)).convert_alpha()
@@ -31,12 +27,16 @@ tree = Tree()
 building_group = pygame.sprite.Group()
 villager_group = pygame.sprite.Group()
 guard_group = pygame.sprite.Group()
-create_buildings(building_group, villager_group, guard_group, items, player_speed)
+create_buildings(building_group, villager_group, guard_group, player_speed)
 
 # creates player centered in the map
-player = Player(items, player_speed, building_group, villager_group)
+player = Player(player_speed, building_group)
 player_group = pygame.sprite.Group()
 player_group.add(player)
+
+# creates items
+item_group = pygame.sprite.Group()
+create_items(item_group, building_group, villager_group, guard_group, player_group)
 
 start = Start()
 score = Score()
@@ -70,10 +70,13 @@ while running:
         building.draw(game_surface, camera_x, camera_y)
     for villager in villager_group:
         villager.draw(game_surface, camera_x, camera_y)
-        villager.update(player_group, villager_group)
+        villager.update(player_group, villager_group, guard_group)
     for guard in guard_group:
         guard.draw(game_surface, camera_x, camera_y)
         guard.update(player_group, guard_group)
+    for items in item_group:
+        items.draw(game_surface, camera_x, camera_y)
+        items.update()
     player.draw(game_surface)
     player.update()
 
@@ -82,8 +85,6 @@ while running:
     score.update_score(player.score)
     start.update()
     start.draw(screen)
-    
-    
     
     # flip() the display to put your work on the screen
     pygame.display.flip()

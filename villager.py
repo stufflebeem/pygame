@@ -3,10 +3,11 @@ from game_data import *
 from map import *
 from player import *
 from random import *
+from items import *
 
 # creates a class of sprite Player for the user to control
 class Villager(pygame.sprite.Sprite):
-    def __init__(self, items, speed, building_group, map_x, map_y):
+    def __init__(self, speed, building_group, map_x, map_y):
         """items: list of items dictionary
            speed: the number of pixles the sprite moves per frame
            building_group: sprites in the buildings"""
@@ -14,7 +15,6 @@ class Villager(pygame.sprite.Sprite):
         self.map_x = map_x
         self.map_y = map_y
         self.speed = speed
-        self.items = items
         self.building_group = building_group
         self.dx = 0
         self.dy = 0
@@ -55,8 +55,8 @@ class Villager(pygame.sprite.Sprite):
         # blits the player sprite onto transparant surface
         blit_list = [villager_model, villager_hair, villager_dress, villager_dress_top, villager_pants,villager_boots, villager_shirt]
         for b in blit_list:
-           sprite = self.items.load_items(b)
-           self.image.blit(sprite["sprite"],(0,0))
+            sprite = load_items(b)
+            self.image.blit(sprite["sprite"],(0,0))
 
         # adjusts spawn location in case of spawning in building
         if pygame.sprite.spritecollide(self, self.building_group, False):
@@ -65,10 +65,11 @@ class Villager(pygame.sprite.Sprite):
             self.rect.topleft = (self.map_x, self.map_y)
         
     # needs to create an automatically updating system for villagers to move and ineract with the world around them
-    def update(self, player_group, villager_group):
+    def update(self, player_group, villager_group, guard_group):
         """player_group: player_group"""
         self.player_group = player_group
         self.villager_group = villager_group
+        self.guard_group = guard_group
         self.rect.topleft = (self.map_x, self.map_y)
         player = self.player_group.sprites()[0]
 
@@ -101,27 +102,42 @@ class Villager(pygame.sprite.Sprite):
         self.map_y += self.dy
         self.rect.topleft = (self.map_x, self.map_y)
 
-        # detects collisions between sprites and buildings
+        # detects collisions between villager and buildings
         if pygame.sprite.spritecollide(self, self.building_group, False) :
             self.dx = -self.dx
             self.dy = -self.dy
             self.map_x += self.dx
             self.map_y += self.dy
             self.rect.topleft = (self.map_x, self.map_y)
-        else:
-            # detects collisions between villager and other villagers
-            for other in self.villager_group:
-                if other != self and self.rect.colliderect(other.rect):
-                    self.dx = -self.dx
-                    self.dy = -self.dy
-                    self.map_x += self.dx
-                    self.map_y += self.dy
-                    self.rect.topleft = (self.map_x, self.map_y)
+            if self.dx == 0 and self.dy == 0:
+                self.map_x += -20
+                self.map_y += 20
+        # detects collisions between villager and other villagers
+        for other in self.villager_group:
+            if other != self and self.rect.colliderect(other.rect):
+                self.dx = -self.dx
+                self.dy = -self.dy
+                self.map_x += self.dx
+                self.map_y += self.dy
+                self.rect.topleft = (self.map_x, self.map_y)
+                if self.dx == 0 and self.dy == 0:
+                    self.map_x += 16
+                    self.map_y += 16
+                # detects collisions between villager and guards
+        if  pygame.sprite.spritecollide(self, self.guard_group, False):
+            self.dx = -self.dx
+            self.dy = -self.dy
+            self.map_x += self.dx
+            self.map_y += self.dy
+            self.rect.topleft = (self.map_x, self.map_y)
+            if self.dx == 0 and self.dy == 0:
+                self.map_x += 16
+                self.map_y += 16   
 
-            # detects collisions between villager and player
-            if pygame.sprite.spritecollide(self, self.player_group, False):
-                    self.dx += player.dx
-                    self.dy += player.dy
+        # detects collisions between villager and player
+        if pygame.sprite.spritecollide(self, self.player_group, False):
+                    self.dx = player.dx
+                    self.dy = player.dy
                     self.map_x += self.dx
                     self.map_y += self.dy
                     self.rect.topleft = (self.map_x, self.map_y)

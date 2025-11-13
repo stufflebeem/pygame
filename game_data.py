@@ -4,26 +4,22 @@ map_width = 120
 map_height = 80
 tile_size = 16
 ui_tile_size = 32
-model = "model_1"
-pants = "none"
-boots = "boots_1"
-shirt = "none"
-hair = "none"
-helmet = "none"
-shield = "none"
-weapon = "none"
-ticks = 0
 zoom_level = 3
-player_speed = 1.5
+player_speed = 2
 female_hair = [13, 14, 17, 18, 21, 22, 26, 30, 34, 38, 42, 46, 57, 58, 61, 62, 66, 70, 74, 78]
 female_shirt = [3, 8, 43, 48, 83, 88]
+guard_weapons = [27, 28, 29, 30, 51, 52, 53, 54, 71, 72, 73, 74]
 num_houses = 12
-instructions = ["Welcome to Adventure Game!", 
-                "Your goal is to protect the village and its inhabitants from", 
-                "raiding hoardes of orcs. There is a garrison of guards in the", 
-                "castle but they are dwindinling in the face of the onslaught.", 
-                "Find whatever weapons and armor you can to defend the",
-                "village.",
+item_list = ['helmet', 'pants', 'boots', 'shirt', 'shield', 'weapon']
+player_items = {'model': "model_1", 'pants' : "none", 'boots' : "none", 'shirt' : "none",
+                'hair' : "hair_1", 'helmet' : "none", 'shield' : "none", 'weapon' : "none"}
+
+instructions = ["𝖂𝖊𝖑𝖈𝖔𝖒𝖊𝖊 𝖙𝖔 𝕬𝖉𝖛𝖊𝖓𝖙𝖚𝖗𝖊 𝕲𝖆𝖒𝖊!", 
+                "𝖄𝖔𝖚𝖗 𝖌𝖔𝖆𝖑 𝖎𝖘 𝖙𝖔 𝖕𝖗𝖔𝖙𝖊𝖈𝖙 𝖙𝖍𝖊 𝖛𝖎𝖑𝖑𝖆𝖌𝖊 𝖆𝖓𝖉 𝖎𝖙𝖘 𝖎𝖞𝖍𝖆𝖇𝖎𝖙𝖆𝖓𝖙𝖘 𝖋𝖗𝖔𝖒", 
+                "𝖗𝖆𝖎𝖉𝖎𝖓𝖌 𝖍𝖔𝖗𝖉𝖊𝖘 𝖔𝖋 𝖔𝖗𝖈𝖘. 𝕿𝖍𝖊𝖗𝖊 𝖎𝖘 𝖆 𝖌𝖆𝖗𝖗𝖎𝖘𝖔𝖓 𝖔𝖐 𝖌𝖚𝖆𝖗𝖉𝖘 𝖎𝖓 𝖙𝖍𝖊", 
+                "𝖈𝖆𝖘𝖙𝖑𝖊 𝖇𝖚𝖙 𝖙𝖍𝖊𝖝 𝖆𝖗𝖊 𝖉𝖜𝖎𝖓𝖉𝖑𝖎𝖓𝖌 𝖎𝖓 𝖙𝖍𝖊 𝖋𝖆𝖈𝖊 𝖔𝖐 𝖙𝖍𝖊 𝖔𝖓𝖘𝖑𝖆𝖚𝖌𝖍𝖙.", 
+                "𝕱𝖎𝖓𝖉 𝖜𝖍𝖆𝖙𝖊𝖛𝖊𝖗 𝖜𝖊𝖆𝖕𝖔𝖓𝖘 𝖆𝖓𝖉 𝖆𝖗𝖒𝖔𝖗 𝖞𝖔𝖚 𝖈𝖆𝖓 𝖙𝖔 𝖉𝖊𝖋𝖊𝖓𝖉 𝖙𝖍𝖊",
+                "𝖛𝖎𝖑𝖑𝖆𝖌𝖊.",
                 "[press SPACE to continue]"]
 
 user_interface = {
@@ -423,16 +419,22 @@ item_data = {
     "shield_18":{'pos': (578, 136), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_19":{'pos': (595, 0), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_20":{'pos': (595, 17), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
+    "shield_21":{'pos': (595, 17), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_22":{'pos': (595, 51), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_23":{'pos': (595, 68), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
+    "shield_24":{'pos': (595, 68), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_25":{'pos': (595, 102), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_26":{'pos': (595, 119), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
+    "shield_27":{'pos': (595, 119), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_28":{'pos': (612, 0), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_29":{'pos': (612, 17), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
+    "shield_30":{'pos': (612, 17), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_31":{'pos': (612, 51), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_32":{'pos': (612, 68), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
+    "shield_33":{'pos': (612, 68), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_34":{'pos': (612, 102), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_35":{'pos': (612, 119), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
+    "shield_36":{'pos': (612, 119), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_37":{'pos': (629, 0), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_38":{'pos': (629, 17), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_39":{'pos': (629, 34), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
@@ -453,14 +455,19 @@ item_data = {
     "shield_54":{'pos': (646, 136), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_55":{'pos': (663, 0), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_56":{'pos': (663, 17), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
+    "shield_57":{'pos': (663, 17), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_58":{'pos': (663, 51), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_59":{'pos': (663, 68), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
+    "shield_60":{'pos': (663, 68), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_61":{'pos': (663, 102), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_62":{'pos': (663, 119), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
+    "shield_63":{'pos': (663, 119), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_64":{'pos': (680, 0), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_65":{'pos': (680, 17), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
+    "shield_66":{'pos': (680, 17), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_67":{'pos': (680, 51), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_68":{'pos': (680, 68), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
+    "shield_69":{'pos': (680, 68), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_70":{'pos': (680, 102), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     "shield_71":{'pos': (680, 119), 'category': 'shield', 'stats': {'defense': 5, 'speed': -2}},
     
@@ -491,10 +498,10 @@ item_data = {
     "weapon_24":{'pos': (748, 51), 'category': 'weapon', 'stats': {'attack': 3, 'speed': -1}},
     "weapon_25":{'pos': (748, 68), 'category': 'weapon', 'stats': {'attack': 3, 'speed': -1}},
     "weapon_26":{'pos': (748, 85), 'category': 'weapon', 'stats': {'attack': 3, 'speed': -1}},
-    "weapon_27":{'pos': (748, 102), 'category': 'weapon', 'stats': {'attack': 3, 'speed': -1}},
-    "weapon_28":{'pos': (748, 119), 'category': 'weapon', 'stats': {'attack': 3, 'speed': -1}},
-    "weapon_29":{'pos': (748, 136), 'category': 'weapon', 'stats': {'attack': 3, 'speed': -1}},
-    "weapon_30":{'pos': (748, 153), 'category': 'weapon', 'stats': {'attack': 3, 'speed': -1}},
+    "weapon_27":{'pos': (748, 102), 'category': 'weapon', 'stats': {'attack': 3, 'speed': 1}},
+    "weapon_28":{'pos': (748, 119), 'category': 'weapon', 'stats': {'attack': 1, 'speed': 3}},
+    "weapon_29":{'pos': (748, 136), 'category': 'weapon', 'stats': {'attack': 4, 'speed': 0.75}},
+    "weapon_30":{'pos': (748, 153), 'category': 'weapon', 'stats': {'attack': 5, 'speed': 0.5}},
     "weapon_31":{'pos': (765, 0), 'category': 'weapon', 'stats': {'attack': 3, 'speed': -1}},
     "weapon_32":{'pos': (765, 17), 'category': 'weapon', 'stats': {'attack': 3, 'speed': -1}},
     "weapon_33":{'pos': (765, 34), 'category': 'weapon', 'stats': {'attack': 3, 'speed': -1}},

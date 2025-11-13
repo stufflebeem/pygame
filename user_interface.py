@@ -6,16 +6,16 @@ class Start():
         self.silver = (168, 169, 174)
         self.black = (0, 0, 0)
         self.title_font = pygame.font.Font('fonts/LatinmodernmathRegular-z8EBa.otf', 80)
-        self.title_surface = self.title_font.render('Adventure Game', 1, self.silver)
+        self.title_surface = self.title_font.render('𝕬𝖉𝖛𝖊𝖓𝖙𝖚𝖗𝖊 𝕲𝖆𝖒𝖊', 1, self.silver)
         self.title_rect = self.title_surface.get_rect()
         self.title_rect.center = (WIDTH//2, HEIGHT//2)
         self.instructions_font = pygame.font.Font('fonts/LatinmodernmathRegular-z8EBa.otf', 24)
-        self.birth_time = pygame.time.get_ticks()
-        self.death_time = 5000
         self.image = pygame.Surface([WIDTH, HEIGHT],pygame.SRCALPHA)
         self.image.fill(self.black)
         self.rect = self.image.get_rect()
         self.presses = 0
+        self.birth_time = pygame.time.get_ticks()
+        self.death_time = 3600
         
 
     def update(self):
@@ -24,38 +24,26 @@ class Start():
             self.presses += 1
     
     def draw(self, screen):
-        if self.presses == 0:
+        if self.presses < 3:
             screen.blit(self.image, (0,0))
-            birth_time = pygame.time.get_ticks()
-            death_time = 10000 + birth_time
             current_age = pygame.time.get_ticks() - self.birth_time
-            current_age_percent = current_age/death_time
+            current_age_percent = current_age/self.death_time
             alpha = 255 - current_age_percent * 255
             self.title_surface.set_alpha(alpha)
             screen.blit(self.title_surface, self.title_rect)
-            if alpha == 0:
-                self.presses += 3600
-        if self.presses == 3600:
+            if alpha < 1:
+                self.presses += 3
+        if self.presses >= 3 and self.presses < 6:
             screen.blit(self.image, (0,0))
-            birth_time = pygame.time.get_ticks()
-            death_time = 10000 + birth_time
-            current_age = pygame.time.get_ticks() - self.birth_time
-            current_age_percent = current_age/death_time
-            alpha = 255 - current_age_percent * 255
             for i in instructions:
                 self.instructions_surface = self.instructions_font.render(i, 1, self.silver)
                 self.instructions_rect = self.title_surface.get_rect()
-                self.instructions_surface.set_alpha(alpha)
                 self.instructions_rect.center = (WIDTH//2, HEIGHT//4 + instructions.index(i)*64)
                 screen.blit(self.instructions_surface, self.instructions_rect)
-                if alpha == 1:
-                    self.presses += 3600
             
-        if self.presses > 7200:
-            birth_time = pygame.time.get_ticks()
-            death_time = 10000 + birth_time
+        if self.presses > 6:
             current_age = pygame.time.get_ticks() - self.birth_time
-            current_age_percent = current_age/death_time
+            current_age_percent = current_age/(self.death_time*3)
             alpha = 255 - current_age_percent * 255
             self.image.set_alpha(alpha)
             screen.blit(self.image, (0,0))

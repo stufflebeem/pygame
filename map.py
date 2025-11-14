@@ -15,9 +15,9 @@ class Tiles():
 
         # creates a list containing a randomly generated series of tiles to be drawn as the background
         self.tile_map = []
-        for y in range(map_height):
+        for _ in range(map_height):
             row = []
-            for x in range(map_width):
+            for _ in range(map_width):
                 if randint(1,100) <=10:
                     row.append(self.grass_3)
                 if randint(1,100) <=30:
@@ -146,6 +146,7 @@ class Castle(pygame.sprite.Sprite):
         screen_y = self.map_y - camera_y
         screen_surface.blit(self.image, (screen_x, screen_y))
 
+# Function to create randomly generated homes and castle with villagers and guards
 def create_buildings(building_group, villager_group, guard_group, speed):
 
     # creates a castle and guards
@@ -168,6 +169,8 @@ def create_buildings(building_group, villager_group, guard_group, speed):
             if n == 2:
                 new_villager.map_x += tile_size
             villager_group.add(new_villager)
+
+# Function to create randomly place items around the map that can be picked up
 def create_items(item_group, building_group, villager_group, guard_group, player_group):
     num = 10
     for _ in range(num):

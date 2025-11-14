@@ -19,6 +19,8 @@ def get_sprite(sheet, x, y, width, height):
     sprite_image.blit(sheet, (0,0), (x, y, width, height))
     
     return sprite_image
+
+# loads items from the dictionary based on name
 def load_items(name):
         """name: dictionary key name for what item is to be loaded"""
         sprite_sheet = pygame.image.load('characters/sprites/roguelikeChar_transparent.png').convert_alpha()
@@ -29,11 +31,9 @@ def load_items(name):
 
 # creates a class of Items for the Player and others to wear and use
 class Items(pygame.sprite.Sprite):
-    def __init__(self, item_group, building_group, villager_group, guard_group, player_group):
+    def __init__(self, item_group, building_group, villager_group, guard_group, player_group, item='none', type ='none'):
         super().__init__()
         """sprite_sheet: the png sheet with extractable sprites"""
-        self.map_x = randint(int(0 + WIDTH/4 + 10), int(map_width * tile_size - WIDTH/4 - 10))
-        self.map_y = randint(int(0 + HEIGHT/4 + 10), int(map_height * tile_size - HEIGHT/4 - 10))
         self.item_group = item_group
         self.building_group = building_group
         self.villager_group = villager_group
@@ -42,31 +42,43 @@ class Items(pygame.sprite.Sprite):
         self.player = self.player_group.sprites()[0]
         self.birth_time = pygame.time.get_ticks()
 
+        if item == 'none':
+            self.map_x = randint(int(0 + WIDTH/4 + 10), int(map_width * tile_size - WIDTH/4 - 10))
+            self.map_y = randint(int(0 + HEIGHT/4 + 10), int(map_height * tile_size - HEIGHT/4 - 10))
+            num = randint(0,1)
+            if num == 0:
+                self.type = item_list[5]
+            else:
+                self.type = item_list[randint (0,5)]
+            if self.type == 'helmet':
+                self.num = randint(1,36)
+            elif self.type == 'pants':
+                self.num = randint(1,8)
+            elif self.type == 'boots':
+                self.num = randint(1,8)
+            elif self.type == 'shirt':
+                self.num = randint(1,120)
+                if self.num in female_shirt:
+                    self.num = 1
+            elif self.type == 'shield':
+                self.num = randint(1,71)
+            elif self.type == 'weapon':
+                self.num = randint(1,110)
+            sprite = load_items(f"{self.type}_{self.num}")
+        else:
+            self.item = item
+            self.type = type
+            sprite = load_items(self.item)
+            player = self.player_group.sprites()[0]
+            self.map_x = player.map_x + tile_size
+            self.map_y = player.map_y + tile_size
+        
         self.image = pygame.Surface([tile_size,tile_size],pygame.SRCALPHA)
         self.image = self.image.convert_alpha()
         self.image.fill((0,0,0,0))
         self.rect = self.image.get_rect(topleft=(self.map_x, self.map_y))
-        num = randint(0,1)
-        if num == 0:
-            self.type = item_list[5]
-        else:
-            self.type = item_list[randint (0,5)]
-        if self.type == 'helmet':
-            self.num = randint(1,36)
-        elif self.type == 'pants':
-            self.num = randint(1,8)
-        elif self.type == 'boots':
-            self.num = randint(1,8)
-        elif self.type == 'shirt':
-            self.num = randint(1,120)
-            if self.num in female_shirt:
-                self.num = 1
-        elif self.type == 'shield':
-            self.num = randint(1,71)
-        elif self.type == 'weapon':
-            self.num = randint(1,110)
-        sprite = load_items(f"{self.type}_{self.num}")
         self.image.blit(sprite["sprite"],(0,0))
+        
         # detects collisions between sprites and buildings
         while pygame.sprite.spritecollide(self, self.building_group, False) or pygame.sprite.spritecollide(self, self.villager_group, False) or pygame.sprite.spritecollide(self, self.guard_group, False):
             self.map_x += 10
@@ -81,7 +93,13 @@ class Items(pygame.sprite.Sprite):
             self.image.blit(load_items("none")["sprite"],(0,0))
             self.item_group.remove(self)
         if pygame.sprite.spritecollide(self, self.player_group, False) and keys[pygame.K_SPACE]:
-            player_items[self.type] = f"{self.type}_{self.num}"
+            item = player_items[self.type]
+            new_item =Items(self.item_group, self.building_group, self.villager_group, self.guard_group, self.player_group, item, self.type)
+            self.item_group.add(new_item)
+            try:
+                player_items[self.type] = f"{self.type}_{self.num}"
+            except AttributeError:
+                player_items[self.type] = self.item
             self.item_group.remove(self)
 
     def draw(self, surface, camera_x, camera_y):

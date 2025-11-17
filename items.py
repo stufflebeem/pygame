@@ -45,11 +45,11 @@ class Items(pygame.sprite.Sprite):
         if item == 'none':
             self.map_x = randint(int(0 + WIDTH/4 + 10), int(map_width * tile_size - WIDTH/4 - 10))
             self.map_y = randint(int(0 + HEIGHT/4 + 10), int(map_height * tile_size - HEIGHT/4 - 10))
-            num = randint(0,1)
+            num = randint(0,2)
             if num == 0:
                 self.type = item_list[5]
             else:
-                self.type = item_list[randint (0,5)]
+                self.type = item_list[randint (0,4)]
             if self.type == 'helmet':
                 self.num = randint(1,36)
             elif self.type == 'pants':
@@ -106,3 +106,10 @@ class Items(pygame.sprite.Sprite):
         screen_x = self.map_x - camera_x
         screen_y = self.map_y - camera_y
         surface.blit(self.image, (screen_x, screen_y))
+
+# Function to create randomly place items around the map that can be picked up
+def create_items(item_group, building_group, villager_group, guard_group, player_group):
+    num = 20
+    for _ in range(num):
+        new_item =Items(item_group, building_group, villager_group, guard_group, player_group)
+        item_group.add(new_item)

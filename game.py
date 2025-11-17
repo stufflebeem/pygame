@@ -1,5 +1,6 @@
 import pygame
 from player import *
+from orc import *
 from map import *
 from user_interface import *
 
@@ -27,7 +28,9 @@ tree = Tree()
 building_group = pygame.sprite.Group()
 villager_group = pygame.sprite.Group()
 guard_group = pygame.sprite.Group()
+orc_group = pygame.sprite.Group()
 create_buildings(building_group, villager_group, guard_group, player_speed)
+create_orcs(building_group, villager_group, guard_group, orc_group)
 
 # creates player centered in the map
 player = Player(player_speed, building_group)
@@ -77,6 +80,9 @@ while running:
     for items in item_group:
         items.draw(game_surface, camera_x, camera_y)
         items.update()
+    for orcs in orc_group:
+        orcs.draw(game_surface, camera_x, camera_y)
+        orcs.update(player_group)
     player.draw(game_surface)
     player.update()
 

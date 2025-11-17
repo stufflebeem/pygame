@@ -169,10 +169,3 @@ def create_buildings(building_group, villager_group, guard_group, speed):
             if n == 2:
                 new_villager.map_x += tile_size
             villager_group.add(new_villager)
-
-# Function to create randomly place items around the map that can be picked up
-def create_items(item_group, building_group, villager_group, guard_group, player_group):
-    num = 10
-    for _ in range(num):
-        new_item =Items(item_group, building_group, villager_group, guard_group, player_group)
-        item_group.add(new_item)

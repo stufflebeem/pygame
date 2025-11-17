@@ -158,9 +158,6 @@ class Orc(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(self, self.player_group, False):
                     self.dx = player.dx
                     self.dy = player.dy
-                    self.map_x += self.dx
-                    self.map_y += self.dy
-                    self.rect.topleft = (self.map_x, self.map_y)
 
     def draw(self, surface, camera_x, camera_y):
         """surface: the screen on which the sprite is drawn"""

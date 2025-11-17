@@ -92,7 +92,7 @@ class Items(pygame.sprite.Sprite):
             self.item_group.add(new_item)
             self.image.blit(load_items("none")["sprite"],(0,0))
             self.item_group.remove(self)
-        if pygame.sprite.spritecollide(self, self.player_group, False) and keys[pygame.K_SPACE]:
+        if pygame.sprite.spritecollide(self, self.player_group, False) and keys[pygame.K_TAB]:
             item = player_items[self.type]
             new_item =Items(self.item_group, self.building_group, self.villager_group, self.guard_group, self.player_group, item, self.type)
             self.item_group.add(new_item)

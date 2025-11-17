@@ -43,6 +43,7 @@ create_items(item_group, building_group, villager_group, guard_group, player_gro
 
 start = Start()
 score = Score()
+game_over = Game_over()
 
 while running:
     # poll for events
@@ -91,6 +92,8 @@ while running:
     score.update_score(player.score)
     start.update()
     start.draw(screen)
+    game_over.update()
+    game_over.draw(screen)
     
     # flip() the display to put your work on the screen
     pygame.display.flip()

@@ -5,11 +5,11 @@ class Start():
     def __init__(self):
         self.silver = (168, 169, 174)
         self.black = (0, 0, 0)
-        self.title_font = pygame.font.Font('fonts/LatinmodernmathRegular-z8EBa.otf', 80)
+        self.title_font = pygame.font.Font('ui_pack/fonts/LatinmodernmathRegular-z8EBa.otf', 80)
         self.title_surface = self.title_font.render('𝕬𝖉𝖛𝖊𝖓𝖙𝖚𝖗𝖊 𝕲𝖆𝖒𝖊', 1, self.silver)
         self.title_rect = self.title_surface.get_rect()
         self.title_rect.center = (WIDTH//2, HEIGHT//2)
-        self.instructions_font = pygame.font.Font('fonts/LatinmodernmathRegular-z8EBa.otf', 24)
+        self.instructions_font = pygame.font.Font('ui_pack/fonts/LatinmodernmathRegular-z8EBa.otf', 24)
         self.image = pygame.Surface([WIDTH, HEIGHT],pygame.SRCALPHA)
         self.image.fill(self.black)
         self.rect = self.image.get_rect()
@@ -61,7 +61,7 @@ class Score():
         self.image = self.image.convert_alpha()
         self.image.fill((0,0,0,0))
 
-        self.score_font = pygame.font.Font('fonts/LatinmodernmathRegular-z8EBa.otf', 20)
+        self.score_font = pygame.font.Font('ui_pack/fonts/LatinmodernmathRegular-z8EBa.otf', 20)
         self.score_surface = self.score_font.render('0', 1, self.black)
         
         # sequentially loads chosen tree sprite from a dictionary and blits it to given positions
@@ -81,3 +81,33 @@ class Score():
         screen_y = 17
         screen_surface.blit(self.image, (screen_x, screen_y))
         screen_surface.blit(self.score_surface, (32,22))
+
+class Game_over():
+    def __init__ (self):
+        self.black = (0,0,0)
+        self.red = (255,0,0)
+        self.game_over_font = pygame.font.Font('ui_pack/fonts/LatinmodernmathRegular-z8EBa.otf', 80)
+        self.game_over_surface = self.game_over_font.render('You Died', 1, self.red)
+        self.title_rect = self.game_over_surface.get_rect()
+        self.title_rect.center = (WIDTH//2, HEIGHT//2)
+        self.instructions_font = pygame.font.Font('ui_pack/fonts/LatinmodernmathRegular-z8EBa.otf', 24)
+        self.image = pygame.Surface([WIDTH, HEIGHT],pygame.SRCALPHA)
+        self.image.fill(self.black)
+        self.rect = self.image.get_rect()
+        self.game_over = False
+        
+    def update(self):
+        keys = pygame.key.get_pressed()
+        if (keys[pygame.K_e]):
+            self.birth_time = pygame.time.get_ticks()
+            self.death_time = 3600
+            self.game_over = True
+    
+    def draw(self, screen):
+        if self.game_over == True:
+            screen.blit(self.image, (0,0))
+            current_age = pygame.time.get_ticks() - self.birth_time
+            current_age_percent = current_age/self.death_time
+            alpha = current_age_percent * 255
+            self.game_over_surface.set_alpha(alpha)
+            screen.blit(self.game_over_surface, self.title_rect)

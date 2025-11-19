@@ -29,11 +29,11 @@ building_group = pygame.sprite.Group()
 villager_group = pygame.sprite.Group()
 guard_group = pygame.sprite.Group()
 orc_group = pygame.sprite.Group()
-create_buildings(building_group, villager_group, guard_group, player_speed)
+create_buildings(building_group, villager_group, guard_group)
 create_orcs(building_group, villager_group, guard_group, orc_group)
 
 # creates player centered in the map
-player = Player(player_speed, building_group)
+player = Player(building_group)
 player_group = pygame.sprite.Group()
 player_group.add(player)
 
@@ -74,7 +74,7 @@ while running:
         building.draw(game_surface, camera_x, camera_y)
     for villager in villager_group:
         villager.draw(game_surface, camera_x, camera_y)
-        villager.update(player_group, villager_group, guard_group)
+        villager.update(player_group, villager_group, guard_group, orc_group)
     for guard in guard_group:
         guard.draw(game_surface, camera_x, camera_y)
         guard.update(player_group, guard_group)

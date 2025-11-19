@@ -6,14 +6,13 @@ from items import *
 
 # creates a class of sprite Player for the user to control
 class Guard(pygame.sprite.Sprite):
-    def __init__(self, speed, building_group, villager_group, map_x, map_y):
+    def __init__(self, building_group, villager_group, map_x, map_y):
         """items: list of items dictionary
            speed: the number of pixles the sprite moves per frame
            building_group: sprites in the buildings"""
         pygame.sprite.Sprite.__init__(self)
         self.map_x = map_x
         self.map_y = map_y
-        self.speed = speed
         self.building_group = building_group
         self.villager_group = villager_group
         self.dx = 0

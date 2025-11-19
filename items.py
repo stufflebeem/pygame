@@ -86,6 +86,7 @@ class Items(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(topleft=(self.map_x, self.map_y))
 
     def update(self):
+        player = self.player_group.sprites()[0]
         keys = pygame.key.get_pressed()
         if (pygame.time.get_ticks())/(self.birth_time+14400) > 1:
             new_item =Items(self.item_group, self.building_group, self.villager_group, self.guard_group, self.player_group)
@@ -101,6 +102,11 @@ class Items(pygame.sprite.Sprite):
             except AttributeError:
                 player_items[self.type] = self.item
             self.item_group.remove(self)
+            player.defense = 0
+            for key, item in player_items.items():
+                if item == "none":
+                    continue
+                player.defense += load_items(item)["stats"]["defense"]
 
     def draw(self, surface, camera_x, camera_y):
         screen_x = self.map_x - camera_x

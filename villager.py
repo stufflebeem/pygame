@@ -7,17 +7,18 @@ from items import *
 
 # creates a class of sprite Player for the user to control
 class Villager(pygame.sprite.Sprite):
-    def __init__(self, speed, building_group, map_x, map_y):
+    def __init__(self, building_group, map_x, map_y):
         """items: list of items dictionary
            speed: the number of pixles the sprite moves per frame
            building_group: sprites in the buildings"""
         pygame.sprite.Sprite.__init__(self)
         self.map_x = map_x
         self.map_y = map_y
-        self.speed = speed
+        self.speed = 2
         self.building_group = building_group
         self.dx = 0
         self.dy = 0
+        self.health = 100
 
         # creates a transparent surface for the sprite
         self.image = pygame.Surface([tile_size,tile_size],pygame.SRCALPHA)
@@ -65,42 +66,62 @@ class Villager(pygame.sprite.Sprite):
             self.rect.topleft = (self.map_x, self.map_y)
         
     # needs to create an automatically updating system for villagers to move and ineract with the world around them
-    def update(self, player_group, villager_group, guard_group):
+    def update(self, player_group, villager_group, guard_group, orc_group):
         """player_group: player_group"""
         self.player_group = player_group
-        self.villager_group = villager_group
-        self.guard_group = guard_group
-        self.rect.topleft = (self.map_x, self.map_y)
         player = self.player_group.sprites()[0]
-
-        # creates movement at random intervals, every 10 seconds a villager should move at least once
-        movement = randint(1,600)
-        if movement == 1:
-            if self.dx == 0:
-                r = randint(0,1)
-                if r == 0:
-                    self.dx = 1
-                else:
-                    self.dx = -1
-            else:
-                self.dx = 0
-        if movement == 2:
-            if self.dy == 0:
-                r = randint(0,1)
-                if r == 0:
-                    self.dy = 1
-                else:
-                    self.dy = -1
-            else:
-                self.dy = 0
-        
-        # stops villagers after around 2 seconds of movement
-        if movement > 580:
-            self.dx = 0
-            self.dy = 0
-        self.map_x += self.dx
-        self.map_y += self.dy
         self.rect.topleft = (self.map_x, self.map_y)
+
+        # flag if orc detected
+        target = False
+
+        # loops over every orc to see if any are in a 7 tile radius
+        for orc in orc_group: 
+            if ((orc.map_x - self.map_x)**2 + (orc.map_y - self.map_x)**2)**0.5 < 7 * tile_size:
+                target = True
+                break
+        
+        # controls movement if villager has detected a orc
+        if target == True:
+            if orc.map_x - self.map_x > 0:
+                self.dx = -1
+            elif orc.map_x - self.map_x == 0:
+                self.dx = 0
+            else:
+                self.dx = 1
+            if orc.map_y - self.map_y > 0:
+                self.dy = -1
+            elif orc.map_y - self.map_y == 0:
+                self.dy = 0
+            else:
+                self.dy = 1
+
+        # creates movement at random intervals, every 10 seconds a villager should move at least once if no orc is detected
+        else:
+            movement = randint(1,600)
+            if movement == 1:
+                if self.dx == 0:
+                    r = randint(0,1)
+                    if r == 0:
+                        self.dx = 1
+                    else:
+                        self.dx = -1
+                else:
+                    self.dx = 0
+            if movement == 2:
+                if self.dy == 0:
+                    r = randint(0,1)
+                    if r == 0:
+                        self.dy = 1
+                    else:
+                        self.dy = -1
+                else:
+                    self.dy = 0
+            
+            # stops villagers after around 2 seconds of movement
+            if movement > 580:
+                self.dx = 0
+                self.dy = 0
 
         # detects collisions between villager and buildings
         if pygame.sprite.spritecollide(self, self.building_group, False) :
@@ -113,7 +134,7 @@ class Villager(pygame.sprite.Sprite):
                 self.map_x += -20
                 self.map_y += 20
         # detects collisions between villager and other villagers
-        for other in self.villager_group:
+        for other in villager_group:
             if other != self and self.rect.colliderect(other.rect):
                 self.dx = -self.dx
                 self.dy = -self.dy
@@ -124,7 +145,7 @@ class Villager(pygame.sprite.Sprite):
                     self.map_x += 16
                     self.map_y += 16
                 # detects collisions between villager and guards
-        if  pygame.sprite.spritecollide(self, self.guard_group, False):
+        if  pygame.sprite.spritecollide(self, guard_group, False):
             self.dx = -self.dx
             self.dy = -self.dy
             self.map_x += self.dx
@@ -141,6 +162,14 @@ class Villager(pygame.sprite.Sprite):
                     self.map_x += self.dx
                     self.map_y += self.dy
                     self.rect.topleft = (self.map_x, self.map_y)
+                    if self.dx == 0 and self.dy == 0:
+                        self.map_x += 16
+                        self.map_y += 16   
+        # detects collisions between villager and orc
+        for orc in orc_group:
+            if orc and self.rect.colliderect(orc.rect):
+                villager_group.remove(self)
+                print("target killed")
        
         # defines world borders for villagers
         if self.map_x < 0 + WIDTH/4+10:

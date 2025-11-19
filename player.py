@@ -5,17 +5,23 @@ from items import *
 
 # creates a class of sprite Player for the user to control
 class Player(pygame.sprite.Sprite):
-    def __init__(self, speed, building_group):
+    def __init__(self, building_group):
         """items: list of items dictionary
            speed: the number of pixles the sprite moves per frame
            building_group: sprites in the buildings"""
         pygame.sprite.Sprite.__init__(self)
         self.map_x = (map_width*tile_size)/2
         self.map_y = (map_height*tile_size)/2
-        self.speed = speed
         self.building_group = building_group
         self.last_dx = 0
         self.last_dy = 0
+
+        # creates player stats
+        self.speed = 2
+        self.defense = 0
+        self.attack = 0
+        self.range = 0
+        self.health = 100
 
         # creates a transparent surface for the sprite
         self.image = pygame.Surface([tile_size,tile_size],pygame.SRCALPHA)
@@ -59,6 +65,7 @@ class Player(pygame.sprite.Sprite):
                self.dy -= self.speed+1
             else:
                 self.dy -= self.speed
+
     def update(self):
         # checks ability to move in the x and y direction based on collision
         self.score = int(pygame.time.get_ticks()/10800)

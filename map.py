@@ -147,14 +147,14 @@ class Castle(pygame.sprite.Sprite):
         screen_surface.blit(self.image, (screen_x, screen_y))
 
 # Function to create randomly generated homes and castle with villagers and guards
-def create_buildings(building_group, villager_group, guard_group, speed):
+def create_buildings(building_group, villager_group, guard_group,):
 
     # creates a castle and guards
     castle = Castle()
     building_group.add(castle)
     num = 5
     for n in range(1,num+1):
-        new_guard = Guard(speed, building_group,villager_group, castle.map_x, castle.map_y+(castle.castle_height+1)*tile_size)
+        new_guard = Guard(building_group,villager_group, castle.map_x, castle.map_y+(castle.castle_height+1)*tile_size)
         new_guard.map_x += tile_size * n
         guard_group.add(new_guard)
 
@@ -165,7 +165,8 @@ def create_buildings(building_group, villager_group, guard_group, speed):
             building_group.add(new_house)
         num = randint(2,3)
         for n in range(1,num):
-            new_villager = Villager(speed, building_group, new_house.map_x, new_house.map_y+(new_house.house_height+1)*tile_size)
+            new_villager = Villager(building_group, new_house.map_x, new_house.map_y+(new_house.house_height+1)*tile_size)
             if n == 2:
                 new_villager.map_x += tile_size
             villager_group.add(new_villager)
+    print (len(villager_group))

@@ -5,23 +5,26 @@ from items import *
 
 # creates a class of sprite Player for the user to control
 class Player(pygame.sprite.Sprite):
-    def __init__(self, building_group):
+    def __init__(self, building_group, villager_group, guard_group, orc_group):
         """items: list of items dictionary
            speed: the number of pixles the sprite moves per frame
            building_group: sprites in the buildings"""
         pygame.sprite.Sprite.__init__(self)
         self.map_x = (map_width*tile_size)/2
         self.map_y = (map_height*tile_size)/2
+
+        # defines groups
         self.building_group = building_group
-        self.last_dx = 0
-        self.last_dy = 0
+        self.villager_group = villager_group
+        self.guard_group = guard_group
+        self.orc_group = orc_group
 
         # creates player stats
         self.speed = 2
         self.defense = 0
         self.attack = 0
         self.range = 0
-        self.health = 100
+        self.health = 20
 
         # creates a transparent surface for the sprite
         self.image = pygame.Surface([tile_size,tile_size],pygame.SRCALPHA)
@@ -30,10 +33,16 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=(self.map_x, self.map_y))
         self.items = player_items
 
-        # adjusts spawn location in case of spawning in building
-        if pygame.sprite.spritecollide(self, self.building_group, False):
-            self.map_x += 100
-            self.map_y += 100
+        # adjusts spawn location in case of spawning in object
+        while True:
+            collision = pygame.sprite.spritecollide(self, self.building_group, False)
+            collision += pygame.sprite.spritecollide(self, self.villager_group, False)
+            collision += pygame.sprite.spritecollide(self, self.guard_group, False)
+            collision += pygame.sprite.spritecollide(self, self.orc_group, False)
+            if not collision:
+                break
+            self.map_x += randint(-10,10)
+            self.map_y += randint(-10,10)
             self.rect.topleft = (self.map_x, self.map_y)
         
     # takes keystroke inputs and changes the position of the sprite on the map relative to the speed
@@ -65,19 +74,48 @@ class Player(pygame.sprite.Sprite):
                self.dy -= self.speed+1
             else:
                 self.dy -= self.speed
+        if (keys[pygame.K_SPACE]):
+            # loops over every orc to see if any are in the range
+            target= False
+            
+            closest_orc = None
+            closest_distance = self.range*tile_size
+            for orc in self.orc_group: 
+                distance = ((orc.map_x - self.map_x)**2 + (orc.map_y - self.map_y)**2)**0.5 
+                if distance < closest_distance:
+                    closest_distance = distance
+                    closest_orc = orc
+                    target = True
+            
 
     def update(self):
-        # checks ability to move in the x and y direction based on collision
+
         self.score = int(pygame.time.get_ticks()/10800)
+        
+        # updates player position
         self.map_x += self.dx
         self.map_y += self.dy
         self.rect.topleft = (self.map_x, self.map_y)
+
+        # detects collisions between player and buildings
         if pygame.sprite.spritecollide(self, self.building_group, False):
             self.map_x -= self.dx
-            self.last_dx = self.dx
             self.map_y -= self.dy
-            self.last_dy = self.dy
-            self.rect.topleft = (self.map_x, self.map_y)
+
+        # detects collisions between player and guards
+        if pygame.sprite.spritecollide(self, self.guard_group, False):
+            self.map_x -= self.dx
+            self.map_y -= self.dy
+
+        # detect collisions between player and villagers
+        if pygame.sprite.spritecollide(self, self.villager_group, False):
+            self.map_x -= self.dx
+            self.map_y -= self.dy
+
+        # detects collisions between player and orcs
+        if pygame.sprite.spritecollide(self, self.orc_group, False):
+            self.map_x -= self.dx
+            self.map_y -= self.dy
 
     def draw(self, surface):
         """surface: the screen on which the sprite is drawn"""

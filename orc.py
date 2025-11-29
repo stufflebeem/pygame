@@ -6,21 +6,27 @@ from items import *
 
 # creates a class of sprite orc as an enemy of the player and orcs
 class Orc(pygame.sprite.Sprite):
-    def __init__(self, speed, building_group, villager_group, guard_group, orc_group, map_x, map_y):
+    def __init__(self, building_group, villager_group, guard_group, orc_group):
         """items: list of items dictionary
-           speed: the number of pixles the sprite moves per frame
            building_group: sprites in the buildings"""
         pygame.sprite.Sprite.__init__(self)
-        self.map_x = map_x
-        self.map_y = map_y
-        self.speed = speed
-        self.building_group = building_group
+        self.map_x = 0
+        self.map_y = 0
+        self.dx = 1
+        self.dy = 1
+
+        # creates orc stats
+        self.speed = 1
+        self.defense = 0
+        self.attack = 0
+        self.range = 0
+        self.health = 20
+
+        # initializes groups
         self.villager_group = villager_group
         self.guard_group = guard_group
         self.orc_group = orc_group
-        self.defense = 0
-        self.dx = 1
-        self.dy = 1
+        self.building_group = building_group
 
         # creates a transparent surface for the sprite
         self.image = pygame.Surface([tile_size,tile_size],pygame.SRCALPHA)
@@ -73,31 +79,55 @@ class Orc(pygame.sprite.Sprite):
            sprite = load_items(b)
            self.image.blit(sprite["sprite"],(0,0))
 
-        # adjusts spawn location in case of spawning in building
-        if pygame.sprite.spritecollide(self, self.building_group, False):
-            self.map_x += 100
-            self.map_y += 100
+       # adjusts spawn location in case of spawning in object
+        safe = False
+        while safe == False:
+            self.map_x = randint(int(0 + WIDTH/4+10), int(map_width * tile_size - WIDTH/4-10))
+            self.map_y = randint(int(0 + HEIGHT/4+10), int(map_height * tile_size - HEIGHT/4-10))
             self.rect.topleft = (self.map_x, self.map_y)
+
+            collision = [other for other in self.orc_group if other != self and self.rect.colliderect(other.rect)]
+            if pygame.sprite.spritecollide(self, self.building_group, False):
+                safe = False
+                print('collision!')
+            elif collision:
+                safe = False
+                print('collision!')
+            elif pygame.sprite.spritecollide(self, self.guard_group, False):
+                safe = False
+                print('collision!')
+            elif pygame.sprite.spritecollide(self, self.villager_group, False):
+                safe = False
+                print('collision!')
+            else:
+                safe = True
+                print('safe')
+        
+        # records safe spawning position
+        self.last_map_x = self.map_x
+        self.last_map_y = self.map_y
         
     # needs to create an automatically updating system for orcs to move and ineract with the world around them
     def update(self, player_group):
         """player_group: player_group"""
         self.player_group = player_group
-        player = self.player_group.sprites()[0]
-        self.rect.topleft = (self.map_x, self.map_y)
 
+        # records last collison free position
+        self.last_map_x = self.map_x
+        self.last_map_y = self.map_y
+    
         # flag to determine if the orc has detected a target villager
         target = False
 
-        # loops over every villager to see if any are in a 15 tile radius
+        # loops over every villager to see if any are in a 7 tile radius
         closest_villager = None
-        closest_distance = 15*tile_size
+        closest_distance = 7*tile_size
         for villager in self.villager_group: 
             distance = ((villager.map_x - self.map_x)**2 + (villager.map_y - self.map_y)**2)**0.5 
             if distance < closest_distance:
                 closest_distance = distance
                 closest_villager = villager
-                target = True 
+                target = True
         
         # controls movement if orc has detected a villager
         if target == True:
@@ -108,46 +138,60 @@ class Orc(pygame.sprite.Sprite):
         else:
             movement = randint(1,600)
             if movement == 1:
-                self.dx = 1 if randint(0,1) == 0 else 1
+                self.dx = 1 if randint(0,1) == 0 else -1
             if movement == 2:
-                self.dy = 1 if randint(0,1) == 0 else 1
+                self.dy = 1 if randint(0,1) == 0 else -1
 
-        # detects collisions between orc and buildings
-        last_x = self.map_x
+        # updates position
         self.map_x += self.dx
-        self.rect.topleft = (self.map_x, self.map_y)
-
-        if pygame.sprite.spritecollide(self, self.building_group, False) :
-            self.map_x = last_x
-            self.dx = 0
-            self.rect.topleft = (self.map_x, self.map_y)
-        
-        last_y = self.map_y
         self.map_y += self.dy
         self.rect.topleft = (self.map_x, self.map_y)
-        if pygame.sprite.spritecollide(self, self.building_group, False) :
-            self.map_y = last_y
-            self.dy = 0
-            self.rect.topleft = (self.map_x, self.map_y)
-            
-        # detects collisions between orcs and guards
-        if  pygame.sprite.spritecollide(self, self.guard_group, False):
-            self.dx = -self.dx
-            self.dy = -self.dy
-            self.map_x += self.dx
-            self.map_y += self.dy
-            self.rect.topleft = (self.map_x, self.map_y)  
 
-        # detects collisions between orcs and player
-        if pygame.sprite.spritecollide(self, self.player_group, False):
-            if player.dx and player.dy == 0:
-                player.map_x += 10
-                player.map_y += 10
-            else:
-                player.dx = -player.dx
-                player.dy = -player.dy
+        # detects collisions between orc and buildings
+        if pygame.sprite.spritecollide(self, self.building_group, False):
+            self.map_x = self.last_map_x
+            self.map_y = self.last_map_y
+            self.rect.topleft = (self.map_x, self.map_y)
+            self.dx = 0
+            self.dy = 0
+            if pygame.sprite.spritecollide(self, self.building_group, False):
+                self.map_x += 12*tile_size
+
+        # detects collisions between orc and other orcs
+        collision = [other for other in self.orc_group if other != self and self.rect.colliderect(other.rect)]
         
-         # defines world borders for villagers
+        if collision:
+            self.map_x = self.last_map_x
+            self.map_y = self.last_map_y
+            self.rect.topleft = (self.map_x, self.map_y)
+            self.dx = 0
+            self.dy = 0
+
+        # detects collisions between orc and guards
+        if pygame.sprite.spritecollide(self, self.guard_group, False):
+            self.map_x = self.last_map_x
+            self.map_y = self.last_map_y
+            self.rect.topleft = (self.map_x, self.map_y)
+            self.dx = 0
+            self.dy = 0
+
+        # detect collisions between orc and villagers
+        if pygame.sprite.spritecollide(self, self.villager_group, False):
+            self.map_x = self.last_map_x
+            self.map_y = self.last_map_y
+            self.rect.topleft = (self.map_x, self.map_y)
+            self.dx = 0
+            self.dy = 0
+
+        # detects collisions between orc and player
+        if pygame.sprite.spritecollide(self, self.player_group, False):
+            self.map_x = self.last_map_x
+            self.map_y = self.last_map_y
+            self.rect.topleft = (self.map_x, self.map_y)
+            self.dx = 0
+            self.dy = 0
+        
+         # defines world borders for orc
         if self.map_x < 0 + WIDTH/4+10 or self.map_x > map_width * tile_size - WIDTH/4-10:
             self.dx = -self.dx
         if  self.map_y > map_height * tile_size - HEIGHT/4-10 or self.map_y < 0 + HEIGHT/4+10:
@@ -160,16 +204,15 @@ class Orc(pygame.sprite.Sprite):
         surface.blit(self.image, (screen_x, screen_y))
 
 def create_orcs(building_group, villager_group, guard_group, orc_group):
-    num = 10
-    map_x = randint(int(0+ WIDTH/4 + 10) ,int(map_width*tile_size - WIDTH/4 - 10))
-    map_y = randint(int(0+ HEIGHT/4 + 10) ,int(map_height*tile_size - HEIGHT/4 -10))
-    print(f"{map_x},{map_y}")
+    num = 5
     for _ in range(num):
-        map_x += tile_size * 2
-        new_orc = Orc(orc_group, building_group, villager_group, guard_group, orc_group, map_x, map_y)
+        new_orc = Orc(building_group, villager_group, guard_group, orc_group)
         orc_group.add(new_orc)
     for orc in orc_group:
         for key, item in orc.items.items():
             if item == "none":
                     continue
+            orc.speed += load_items(item)["stats"]["speed"]
             orc.defense += load_items(item)["stats"]["defense"]
+            orc.attack += load_items(item)["stats"]["attack"]
+            orc.range += load_items(item)["stats"]["range"]

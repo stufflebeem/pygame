@@ -39,8 +39,7 @@ player_group.add(player)
 
 # creates items
 item_group = pygame.sprite.Group()
-create_items(item_group, building_group, villager_group, guard_group, player_group)
-
+create_items(item_group, building_group, player_group)
 start = Start()
 score = Score()
 game_over = Game_over()
@@ -66,6 +65,10 @@ while running:
     
     # functions
     player.keys()
+    if len(orc_group) == 0:
+        level += 1
+        create_orcs(building_group, villager_group, guard_group, orc_group)
+        print(f"Level {level}")
 
     # drawing
     grass.draw(game_surface, camera_x, camera_y)

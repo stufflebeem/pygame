@@ -19,8 +19,10 @@ class Orc(pygame.sprite.Sprite):
         self.speed = 1
         self.defense = 0
         self.attack = 0
-        self.range = 0
-        self.health = 20
+        self.range = 1
+        self.health = 2
+        self.reload = 0
+        self.reload_time = 0
 
         # initializes groups
         self.villager_group = villager_group
@@ -82,26 +84,21 @@ class Orc(pygame.sprite.Sprite):
        # adjusts spawn location in case of spawning in object
         safe = False
         while safe == False:
-            self.map_x = randint(int(0 + WIDTH/4+10), int(map_width * tile_size - WIDTH/4-10))
-            self.map_y = randint(int(0 + HEIGHT/4+10), int(map_height * tile_size - HEIGHT/4-10))
+            self.map_x = randint(int(0 + 12 * tile_size), int(map_width * tile_size - 13 * tile_size))
+            self.map_y = randint(int(0 + 9 * tile_size), int(map_height * tile_size - 10 * tile_size))
             self.rect.topleft = (self.map_x, self.map_y)
 
             collision = [other for other in self.orc_group if other != self and self.rect.colliderect(other.rect)]
             if pygame.sprite.spritecollide(self, self.building_group, False):
                 safe = False
-                print('collision!')
             elif collision:
                 safe = False
-                print('collision!')
             elif pygame.sprite.spritecollide(self, self.guard_group, False):
                 safe = False
-                print('collision!')
             elif pygame.sprite.spritecollide(self, self.villager_group, False):
                 safe = False
-                print('collision!')
             else:
                 safe = True
-                print('safe')
         
         # records safe spawning position
         self.last_map_x = self.map_x
@@ -111,6 +108,11 @@ class Orc(pygame.sprite.Sprite):
     def update(self, player_group):
         """player_group: player_group"""
         self.player_group = player_group
+        player = self.player_group.sprites()[0]
+
+        # checks health
+        if self.health <= 0:
+            self.orc_group.remove(self)
 
         # records last collison free position
         self.last_map_x = self.map_x
@@ -120,19 +122,30 @@ class Orc(pygame.sprite.Sprite):
         target = False
 
         # loops over every villager to see if any are in a 7 tile radius
-        closest_villager = None
+        closest_enemy = None
         closest_distance = 7*tile_size
         for villager in self.villager_group: 
             distance = ((villager.map_x - self.map_x)**2 + (villager.map_y - self.map_y)**2)**0.5 
             if distance < closest_distance:
                 closest_distance = distance
-                closest_villager = villager
+                closest_enemy = villager
+                target = True
+        for guard in self.guard_group: 
+            distance = ((guard.map_x - self.map_x)**2 + (guard.map_y - self.map_y)**2)**0.5 
+            if distance < closest_distance:
+                closest_distance = distance
+                closest_enemy = guard
+                target = True
+        distance = ((player.map_x - self.map_x)**2 + (player.map_y - self.map_y)**2)**0.5
+        if distance < closest_distance:
+                closest_distance = distance
+                closest_enemy = player
                 target = True
         
         # controls movement if orc has detected a villager
         if target == True:
-            self.dx = 1 if closest_villager.map_x > self.map_x else -1
-            self.dy = 1 if closest_villager.map_y > self.map_y else -1
+            self.dx = 1 if closest_enemy.map_x > self.map_x else -1
+            self.dy = 1 if closest_enemy.map_y > self.map_y else -1
 
         # creates movement at random intervals, every 10 seconds a orc should move at least once if no villager is detected
         else:
@@ -191,11 +204,42 @@ class Orc(pygame.sprite.Sprite):
             self.dx = 0
             self.dy = 0
         
-         # defines world borders for orc
-        if self.map_x < 0 + WIDTH/4+10 or self.map_x > map_width * tile_size - WIDTH/4-10:
-            self.dx = -self.dx
-        if  self.map_y > map_height * tile_size - HEIGHT/4-10 or self.map_y < 0 + HEIGHT/4+10:
-             self.dy = -self.dy
+        # defines world borders for orc
+        if self.map_x < 0 + 12 * tile_size or self.map_x > map_width * tile_size - 13 * tile_size:
+            self.map_x = self.last_map_x
+            self.dx = 0
+        if  self.map_y > map_height * tile_size - 10 * tile_size or self.map_y < 0 + 9 * tile_size:
+             self.map_y = self.last_map_y
+             self.dy = 0
+
+                # attack orcs
+        target = False
+        closest_enemy = None
+        closest_distance = self.range * tile_size
+        for villager in self.villager_group: 
+            distance = ((villager.map_x - self.map_x)**2 + (villager.map_y - self.map_y)**2)**0.5 
+            if distance < closest_distance:
+                closest_distance = distance
+                closest_enemy = villager
+                target = True
+        for guard in self.guard_group: 
+            distance = ((guard.map_x - self.map_x)**2 + (guard.map_y - self.map_y)**2)**0.5 
+            if distance < closest_distance:
+                closest_distance = distance
+                closest_enemy = guard
+                target = True
+        distance = ((player.map_x - self.map_x)**2 + (player.map_y - self.map_y)**2)**0.5
+        if distance < closest_distance:
+                closest_distance = distance
+                closest_enemy = player
+                target = True
+        
+        if target == True and self.reload_time < pygame.time.get_ticks():
+            print(closest_enemy.health)
+            closest_enemy.health -= self.attack * (1/closest_enemy.defense)
+            closest_enemy.dx = -self.dx
+            closest_enemy.dy = -self.dy
+            self.reload_time = pygame.time.get_ticks() + self.reload * 60
 
     def draw(self, surface, camera_x, camera_y):
         """surface: the screen on which the sprite is drawn"""
@@ -204,7 +248,7 @@ class Orc(pygame.sprite.Sprite):
         surface.blit(self.image, (screen_x, screen_y))
 
 def create_orcs(building_group, villager_group, guard_group, orc_group):
-    num = 5
+    num = 5 + level
     for _ in range(num):
         new_orc = Orc(building_group, villager_group, guard_group, orc_group)
         orc_group.add(new_orc)
@@ -212,7 +256,8 @@ def create_orcs(building_group, villager_group, guard_group, orc_group):
         for key, item in orc.items.items():
             if item == "none":
                     continue
-            orc.speed += load_items(item)["stats"]["speed"]
             orc.defense += load_items(item)["stats"]["defense"]
+            orc.speed += load_items(item)["stats"]["speed"]
             orc.attack += load_items(item)["stats"]["attack"]
+            orc.reload += load_items(item)["stats"]["reload"]
             orc.range += load_items(item)["stats"]["range"]

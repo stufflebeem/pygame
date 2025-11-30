@@ -19,17 +19,16 @@ class Villager(pygame.sprite.Sprite):
         self.dx = 0
         self.dy = 0
 
-        # initializes stats
-        self.health = 100
-        self.speed = 2
+        # creates villager stats
+        self.speed = 1
+        self.defense = 1
+        self.health = 3
 
         # initializes groups
         self.villager_group = villager_group
         self.guard_group = guard_group
         self.orc_group = orc_group
         self.building_group = building_group
-
-        print(len(self.villager_group))
 
         # creates a transparent surface for the sprite
         self.image = pygame.Surface([tile_size,tile_size],pygame.SRCALPHA)
@@ -65,7 +64,9 @@ class Villager(pygame.sprite.Sprite):
                 villager_shirt = (f"shirt_{shirt}")
 
         # blits the player sprite onto transparant surface
-        blit_list = [villager_model, villager_hair, villager_dress, villager_dress_top, villager_pants,villager_boots, villager_shirt]
+        self.items = {'model': villager_model, 'pants' : villager_pants, 'boots' : villager_boots, 'shirt' : villager_shirt,
+                'hair' : villager_hair, 'dress' : villager_dress, 'dress_top' : villager_dress_top}
+        blit_list = [villager_model, villager_hair, villager_dress, villager_dress_top, villager_pants, villager_boots, villager_shirt]
         for b in blit_list:
             sprite = load_items(b)
             self.image.blit(sprite["sprite"],(0,0))
@@ -73,26 +74,21 @@ class Villager(pygame.sprite.Sprite):
         # adjusts spawn location in case of spawning in object
         safe = False
         while safe == False:
-            self.map_x = randint(int(0 + WIDTH/4+10), int(map_width * tile_size - WIDTH/4-10))
-            self.map_y = randint(int(0 + HEIGHT/4+10), int(map_height * tile_size - HEIGHT/4-10))
+            self.map_x = randint(int(0 + 12 * tile_size), int(map_width * tile_size - 13 * tile_size))
+            self.map_y = randint(int(0 + 9 * tile_size), int(map_height * tile_size - 10 * tile_size))
             self.rect.topleft = (self.map_x, self.map_y)
 
             collision = [other for other in self.villager_group if other != self and self.rect.colliderect(other.rect)]
             if pygame.sprite.spritecollide(self, self.building_group, False):
                 safe = False
-                print('collision!')
             elif collision:
                 safe = False
-                print('collision!')
             elif pygame.sprite.spritecollide(self, self.guard_group, False):
                 safe = False
-                print('collision!')
             elif pygame.sprite.spritecollide(self, self.orc_group, False):
                 safe = False
-                print('collision!')
             else:
                 safe = True
-                print('safe')
             
         # records safe spawning position
         self.last_map_x = self.map_x
@@ -103,6 +99,10 @@ class Villager(pygame.sprite.Sprite):
         """player_group: player_group"""
         self.player_group = player_group
         player = self.player_group.sprites()[0]
+
+        # checks health
+        if self.health <= 0:
+            self.villager_group.remove(self)
 
         # records last collison free position
         self.last_map_x = self.map_x
@@ -222,10 +222,12 @@ class Villager(pygame.sprite.Sprite):
                 self.dy = 0
 
         # defines world borders for villager
-        if self.map_x < 0 + WIDTH/4+10 or self.map_x > map_width * tile_size - WIDTH/4-10:
-            self.dx = -self.dx
-        if  self.map_y > map_height * tile_size - HEIGHT/4-10 or self.map_y < 0 + HEIGHT/4+10:
-            self.dy = -self.dy
+        if self.map_x < 0 + 12 * tile_size or self.map_x > map_width * tile_size - 13 * tile_size:
+            self.map_x = self.last_map_x
+            self.dx = 0
+        if  self.map_y > map_height * tile_size - 10 * tile_size or self.map_y < 0 + 9 * tile_size:
+             self.map_y = self.last_map_y
+             self.dy = 0
 
     def draw(self, surface, camera_x, camera_y):
         """surface: the screen on which the sprite is drawn"""

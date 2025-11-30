@@ -96,9 +96,14 @@ class Game_over():
         self.rect = self.image.get_rect()
         self.game_over = False
         
-    def update(self):
+    def update(self, player_group):
+        player = player_group.sprites()[0]
         keys = pygame.key.get_pressed()
         if (keys[pygame.K_e]):
+            self.birth_time = pygame.time.get_ticks()
+            self.death_time = 3600
+            self.game_over = True
+        if player.health <=0:
             self.birth_time = pygame.time.get_ticks()
             self.death_time = 3600
             self.game_over = True

@@ -156,6 +156,15 @@ def create_buildings(building_group, villager_group, guard_group,orc_group):
     for n in range(1,num+1):
         new_guard = Guard(building_group, guard_group, villager_group, orc_group)
         guard_group.add(new_guard)
+    for guard in guard_group:
+        for key, item in guard.items.items():
+            if item == "none":
+                    continue
+            guard.defense += load_items(item)["stats"]["defense"]
+            guard.speed += load_items(item)["stats"]["speed"]
+            guard.attack += load_items(item)["stats"]["attack"]
+            guard.reload += load_items(item)["stats"]["reload"]
+            guard.range += load_items(item)["stats"]["range"]
 
     # creates houses and villagers
     while len(building_group) < num_houses:
@@ -166,4 +175,9 @@ def create_buildings(building_group, villager_group, guard_group,orc_group):
         for n in range(0,num):
             new_villager = Villager(building_group,villager_group, guard_group, orc_group)
             villager_group.add(new_villager)
-    print (len(villager_group))
+        for villager in villager_group:
+            for key, item in villager.items.items():
+                if item == "none":
+                        continue
+                villager.defense += load_items(item)["stats"]["defense"]
+                villager.speed += load_items(item)["stats"]["speed"]

@@ -21,10 +21,12 @@ class Player(pygame.sprite.Sprite):
 
         # creates player stats
         self.speed = 2
-        self.defense = 0
+        self.defense = 1
         self.attack = 0
-        self.range = 0
-        self.health = 20
+        self.range = 1
+        self.reload = 0
+        self.reload_time = 0
+        self.health = 5
 
         # creates a transparent surface for the sprite
         self.image = pygame.Surface([tile_size,tile_size],pygame.SRCALPHA)
@@ -54,38 +56,42 @@ class Player(pygame.sprite.Sprite):
         self.dy = 0
         
         # acts based on key input to move the sprite around the screen with WASD and arrows
-        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.map_x > 0 + WIDTH/4+10:
+        if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.map_x > 0 + 12 * tile_size:
             if (keys[pygame.K_LSHIFT]):
                 self.dx -= self.speed+1
             else:
                 self.dx -= self.speed
-        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.map_x < map_width * tile_size - WIDTH/4-10:
+        if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.map_x < map_width * tile_size - 13 * tile_size:
             if (keys[pygame.K_LSHIFT]):
                 self.dx += self.speed+1
             else:
                 self.dx += self.speed
-        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.map_y < map_height * tile_size - HEIGHT/4-10:
+        if (keys[pygame.K_DOWN] or keys[pygame.K_s]) and self.map_y < map_height * tile_size - 10 * tile_size:
             if (keys[pygame.K_LSHIFT]):
                 self.dy += self.speed+1
             else:
                 self.dy += self.speed
-        if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.map_y > 0 + HEIGHT/4+10:
+        if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.map_y > 0 + 9 * tile_size:
             if (keys[pygame.K_LSHIFT]):
                self.dy -= self.speed+1
             else:
                 self.dy -= self.speed
         if (keys[pygame.K_SPACE]):
             # loops over every orc to see if any are in the range
-            target= False
-            
+            target = False
             closest_orc = None
-            closest_distance = self.range*tile_size
+            closest_distance = self.range * tile_size
             for orc in self.orc_group: 
                 distance = ((orc.map_x - self.map_x)**2 + (orc.map_y - self.map_y)**2)**0.5 
                 if distance < closest_distance:
                     closest_distance = distance
                     closest_orc = orc
                     target = True
+            if target == True and self.reload_time < pygame.time.get_ticks():
+                closest_orc.health -= self.attack * (1/closest_orc.defense)
+                closest_orc.dx = -self.dx
+                closest_orc.dy = -self.dy
+                self.reload_time = pygame.time.get_ticks() + self.reload * 60
             
 
     def update(self):

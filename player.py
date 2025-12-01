@@ -9,6 +9,8 @@ class Player(pygame.sprite.Sprite):
         """items: list of items dictionary
            speed: the number of pixles the sprite moves per frame
            building_group: sprites in the buildings"""
+        
+        # creates player in the middle of the map
         pygame.sprite.Sprite.__init__(self)
         self.map_x = (map_width*tile_size)/2
         self.map_y = (map_height*tile_size)/2
@@ -105,16 +107,21 @@ class Player(pygame.sprite.Sprite):
             self.map_y -= self.dy
 
     def attacking(self, attack_sound):
-        # loops over every orc to see if any are in the range
+        """attack sound: noise made by attacking fuction"""
+
+        # creates parameters to detect ability to attack an orc
         target = False
         closest_orc = None
         closest_distance = self.range * tile_size
+
+        # loops over every orc to see if any are in the range
         for orc in self.orc_group: 
             distance = ((orc.map_x - self.map_x)**2 + (orc.map_y - self.map_y)**2)**0.5 
             if distance < closest_distance:
                 closest_distance = distance
                 closest_orc = orc
                 target = True
+
         # if orcs are in range subtracts health from the nearest one and starts cooldown
         if target == True and self.reload_time < pygame.time.get_ticks():
             closest_orc.health -= self.attack * (1/closest_orc.defense)
@@ -125,7 +132,8 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self, surface):
         """surface: the screen on which the sprite is drawn"""
-        # blits the player sprite onto transparant surface
+
+        # blits the player and all items sprite onto transparant surface
         self.image.fill((0,0,0,0))
         for k, v in self.items.items():
            sprite = load_items(v)

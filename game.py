@@ -63,12 +63,14 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        # checks for keys being pressed once which counts as an in game event
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 paused = not paused
             if event.key == pygame.K_SPACE:
                 presses += 1
                 player.attacking(attack_sound)
+    # wipes screen
     screen.fill('black')
    
 # RENDER YOUR GAME HERE
@@ -82,13 +84,18 @@ while running:
     zoom_rect = zoomed_surface.get_rect(center=(WIDTH//2, HEIGHT//2))
     screen.blit(zoomed_surface, zoom_rect)
     
-    # functions
+    # functions that cease if the game is paused
     if not paused:
+
+        # player inputs
         player.keys()
+
+        # increases level when orcs are gone and spawns more
         if len(orc_group) == 0:
             level += 1
             create_orcs(building_group, villager_group, guard_group, orc_group)
-            print(f"Level {level}")
+
+        # updates sprites and score
         for villager in villager_group:
             villager.update(player_group, death_sound)
         for guard in guard_group:

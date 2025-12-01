@@ -7,9 +7,14 @@ from items import *
 # creates a class of sprite orc as an enemy of the player and orcs
 class Orc(pygame.sprite.Sprite):
     def __init__(self, building_group, villager_group, guard_group, orc_group):
-        """items: list of items dictionary
-           building_group: sprites in the buildings"""
+        """building_group: sprites in the buildings
+           villager_group: sprites in the villagers
+           guard_group: sprites in the guards
+           orc_group: sprites in the orcs"""
+        
         pygame.sprite.Sprite.__init__(self)
+
+        # initializes movement 
         self.map_x = 0
         self.map_y = 0
         self.dx = 1
@@ -36,7 +41,7 @@ class Orc(pygame.sprite.Sprite):
         self.image.fill((0,0,0,0))
         self.rect = self.image.get_rect(topleft=(self.map_x, self.map_y))
 
-        # orc items
+        # orc items. Randomly generates clothes given certain parameters
         type_orc = randint(1,10)
         if type_orc == 10:
             model = randint(1,2)
@@ -73,7 +78,7 @@ class Orc(pygame.sprite.Sprite):
             orc_weapon = (f"weapon_{guard_weapons[weapon]}")
             
 
-        # blits the player sprite onto transparant surface
+        # blits the orc items sprites onto transparant surface
         self.items = {'model': orc_model, 'pants' : orc_pants, 'boots' : orc_boots, 'shirt' : orc_shirt,
                 'hair' : "none", 'helmet' : orc_helmet, 'shield' : "none", 'weapon' : orc_weapon}
         blit_list = [orc_model,  orc_shirt, orc_pants, orc_boots, orc_helmet, orc_weapon]
@@ -104,9 +109,10 @@ class Orc(pygame.sprite.Sprite):
         self.last_map_x = self.map_x
         self.last_map_y = self.map_y
         
-    # needs to create an automatically updating system for orcs to move and ineract with the world around them
     def update(self, player_group, death_sound):
-        """player_group: player_group"""
+        """player_group: group of player sprites
+            death sound: sound made when sprite dies"""
+
         # checks player
         self.player_group = player_group
         player = self.player_group.sprites()[0]
@@ -132,24 +138,26 @@ class Orc(pygame.sprite.Sprite):
                 closest_distance = distance
                 closest_enemy = villager
                 target = True
+        # loops over every guard to see if any are in a 7 tile radius
         for guard in self.guard_group: 
             distance = ((guard.map_x - self.map_x)**2 + (guard.map_y - self.map_y)**2)**0.5 
             if distance < closest_distance:
                 closest_distance = distance
                 closest_enemy = guard
                 target = True
+        # checks to see if player is in a 7 tile radius
         distance = ((player.map_x - self.map_x)**2 + (player.map_y - self.map_y)**2)**0.5
         if distance < closest_distance:
                 closest_distance = distance
                 closest_enemy = player
                 target = True
         
-        # controls movement if orc has detected a villager
+        # controls movement if orc has detected an enemy
         if target == True:
             self.dx = 1 if closest_enemy.map_x > self.map_x else -1
             self.dy = 1 if closest_enemy.map_y > self.map_y else -1
 
-        # creates movement at random intervals, every 10 seconds a orc should move at least once if no villager is detected
+        # creates movement at random intervals, every 10 seconds a orc should move at least once if no enemy is detected
         else:
             movement = randint(1,600)
             if movement == 1:
@@ -218,24 +226,31 @@ class Orc(pygame.sprite.Sprite):
         target = False
         closest_enemy = None
         closest_distance = self.range * tile_size
+
+        #loops over villagers
         for villager in self.villager_group: 
             distance = ((villager.map_x - self.map_x)**2 + (villager.map_y - self.map_y)**2)**0.5 
             if distance < closest_distance:
                 closest_distance = distance
                 closest_enemy = villager
                 target = True
+
+        #loops over guards
         for guard in self.guard_group: 
             distance = ((guard.map_x - self.map_x)**2 + (guard.map_y - self.map_y)**2)**0.5 
             if distance < closest_distance:
                 closest_distance = distance
                 closest_enemy = guard
                 target = True
+        
+        # checks player
         distance = ((player.map_x - self.map_x)**2 + (player.map_y - self.map_y)**2)**0.5
         if distance < closest_distance:
                 closest_distance = distance
                 closest_enemy = player
                 target = True
         
+        # attacks nearest enemy
         if target == True and self.reload_time < pygame.time.get_ticks():
             closest_enemy.health -= self.attack * (1/closest_enemy.defense)
             closest_enemy.dx = -self.dx
@@ -243,16 +258,26 @@ class Orc(pygame.sprite.Sprite):
             self.reload_time = pygame.time.get_ticks() + self.reload * 60
 
     def draw(self, surface, camera_x, camera_y):
-        """surface: the screen on which the sprite is drawn"""
+        """surface: the screen on which the sprite is drawn
+            camera_x: map position x in the center of the screen
+            camera_y: map position y in the center of the screen"""
         screen_x = self.map_x - camera_x
         screen_y = self.map_y - camera_y
         surface.blit(self.image, (screen_x, screen_y))
 
 def create_orcs(building_group, villager_group, guard_group, orc_group):
+    """building_group: sprites in the buildings
+        villager_group: sprites in the villagers
+        guard_group: sprites in the guards
+        orc_group: sprites in the orcs"""
+    
+    # creates 5 orcs plus 1 for every additional level
     num = 5 + level
     for _ in range(num):
         new_orc = Orc(building_group, villager_group, guard_group, orc_group)
         orc_group.add(new_orc)
+    
+    # creates stats and updates them for all orcs in orc group
     for orc in orc_group:
         for key, item in orc.items.items():
             if item == "none":

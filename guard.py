@@ -4,12 +4,13 @@ from map import *
 from player import *
 from items import *
 
-# creates a class of sprite Player for the user to control
+# creates a class of sprite guard to assist player
 class Guard(pygame.sprite.Sprite):
     def __init__(self, building_group, guard_group, villager_group, orc_group):
-        """items: list of items dictionary
-           speed: the number of pixles the sprite moves per frame
-           building_group: sprites in the buildings"""
+        """building_group: sprites in the buildings
+           villager_group: sprites in the villagers
+           guard_group: sprites in the guards
+           orc_group: sprites in the orcs"""
         pygame.sprite.Sprite.__init__(self)
         
         # initializes movement

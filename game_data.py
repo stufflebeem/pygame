@@ -1,6 +1,7 @@
 WIDTH = 800
 HEIGHT = 600
 level = 0
+presses = 0
 map_width = 120
 map_height = 80
 tile_size = 16

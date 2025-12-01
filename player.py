@@ -76,27 +76,12 @@ class Player(pygame.sprite.Sprite):
                self.dy -= self.speed+1
             else:
                 self.dy -= self.speed
-        if (keys[pygame.K_SPACE]):
-            # loops over every orc to see if any are in the range
-            target = False
-            closest_orc = None
-            closest_distance = self.range * tile_size
-            for orc in self.orc_group: 
-                distance = ((orc.map_x - self.map_x)**2 + (orc.map_y - self.map_y)**2)**0.5 
-                if distance < closest_distance:
-                    closest_distance = distance
-                    closest_orc = orc
-                    target = True
-            if target == True and self.reload_time < pygame.time.get_ticks():
-                closest_orc.health -= self.attack * (1/closest_orc.defense)
-                closest_orc.dx = -self.dx
-                closest_orc.dy = -self.dy
-                self.reload_time = pygame.time.get_ticks() + self.reload * 60
-            
 
-    def update(self):
+    def update(self, player_group):
 
         self.score = int(pygame.time.get_ticks()/10800)
+        if self.health <= 0:
+            player_group.remove(self)
         
         # updates player position
         self.map_x += self.dx
@@ -122,6 +107,23 @@ class Player(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(self, self.orc_group, False):
             self.map_x -= self.dx
             self.map_y -= self.dy
+    def attack(self):
+        # loops over every orc to see if any are in the range
+        target = False
+        closest_orc = None
+        closest_distance = self.range * tile_size
+        for orc in self.orc_group: 
+            distance = ((orc.map_x - self.map_x)**2 + (orc.map_y - self.map_y)**2)**0.5 
+            if distance < closest_distance:
+                closest_distance = distance
+                closest_orc = orc
+                target = True
+        # if orcs are in range subtracts health from the nearest one and starts cooldown
+        if target == True and self.reload_time < pygame.time.get_ticks():
+            closest_orc.health -= self.attack * (1/closest_orc.defense)
+            closest_orc.dx = -self.dx
+            closest_orc.dy = -self.dy
+            self.reload_time = pygame.time.get_ticks() + self.reload * 60
 
     def draw(self, surface):
         """surface: the screen on which the sprite is drawn"""

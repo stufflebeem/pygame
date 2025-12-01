@@ -54,6 +54,9 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 paused = not paused
+            if event.key == pygame.K_SPACE:
+                presses += 1
+                player.attack 
     screen.fill('black')
    
 # RENDER YOUR GAME HERE
@@ -82,7 +85,8 @@ while running:
             items.update()
         for orcs in orc_group:
             orcs.update(player_group)
-        player.update()
+        player.update(player_group)
+
 
     # drawing
     grass.draw(game_surface, camera_x, camera_y)
@@ -103,7 +107,7 @@ while running:
     # title
     score.draw(screen)
     score.update_score(player.score)
-    start.update()
+    start.update(presses)
     start.draw(screen)
     pause(paused, screen)
     game_over.update(player_group)

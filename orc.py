@@ -108,7 +108,10 @@ class Orc(pygame.sprite.Sprite):
     def update(self, player_group):
         """player_group: player_group"""
         self.player_group = player_group
-        player = self.player_group.sprites()[0]
+        try:
+            player = self.player_group.sprites()[0]
+        except IndexError:
+            return None
 
         # checks health
         if self.health <= 0:
@@ -212,7 +215,7 @@ class Orc(pygame.sprite.Sprite):
              self.map_y = self.last_map_y
              self.dy = 0
 
-                # attack orcs
+        # attack villagers, guards, and player
         target = False
         closest_enemy = None
         closest_distance = self.range * tile_size

@@ -18,13 +18,11 @@ class Start():
         self.death_time = 3600
         
 
-    def update(self):
-        keys = pygame.key.get_pressed()
-        if (keys[pygame.K_SPACE]):
-            self.presses += 1
+    def update(self, presses):
+        self.presses = presses
     
     def draw(self, screen):
-        if self.presses < 3:
+        if self.presses <= 1:
             screen.blit(self.image, (0,0))
             current_age = pygame.time.get_ticks() - self.birth_time
             current_age_percent = current_age/self.death_time
@@ -33,7 +31,7 @@ class Start():
             screen.blit(self.title_surface, self.title_rect)
             if alpha < 1:
                 self.presses += 3
-        if self.presses >= 3 and self.presses < 6:
+        if self.presses == 2:
             screen.blit(self.image, (0,0))
             for i in instructions:
                 self.instructions_surface = self.instructions_font.render(i, 1, self.silver)
@@ -41,16 +39,12 @@ class Start():
                 self.instructions_rect.center = (WIDTH//2, HEIGHT//4 + instructions.index(i)*64)
                 screen.blit(self.instructions_surface, self.instructions_rect)
             
-        if self.presses > 6:
+        if self.presses > 2:
             current_age = pygame.time.get_ticks() - self.birth_time
             current_age_percent = current_age/(self.death_time*3)
             alpha = 255 - current_age_percent * 255
             self.image.set_alpha(alpha)
-            screen.blit(self.image, (0,0))
-
-        
-        
-        
+            screen.blit(self.image, (0,0))        
 
 class Score():
     def __init__ (self):
@@ -95,18 +89,18 @@ class Game_over():
         self.image.fill(self.black)
         self.rect = self.image.get_rect()
         self.game_over = False
+        self.stopped = False
         
     def update(self, player_group):
-        player = player_group.sprites()[0]
-        keys = pygame.key.get_pressed()
-        if (keys[pygame.K_e]):
-            self.birth_time = pygame.time.get_ticks()
-            self.death_time = 3600
-            self.game_over = True
-        if player.health <=0:
-            self.birth_time = pygame.time.get_ticks()
-            self.death_time = 3600
-            self.game_over = True
+        if self.stopped == False:
+            if len(player_group) == 0:
+                self.stopped = True
+                self.birth_time = pygame.time.get_ticks()
+                self.death_time = 3600
+                self.game_over = True
+        else:
+            return
+            
     
     def draw(self, screen):
         if self.game_over == True:
@@ -114,6 +108,7 @@ class Game_over():
             current_age = pygame.time.get_ticks() - self.birth_time
             current_age_percent = current_age/self.death_time
             alpha = current_age_percent * 255
+            self.game_over_surface = self.game_over_font.render('You Died', 1, self.red)
             self.game_over_surface.set_alpha(alpha)
             screen.blit(self.game_over_surface, self.title_rect)
 

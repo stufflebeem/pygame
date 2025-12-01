@@ -84,10 +84,7 @@ class Items(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(topleft=(self.map_x, self.map_y))
 
     def update(self):
-        try:
-            player = self.player_group.sprites()[0]
-        except IndexError:
-            return None
+        player = self.player_group.sprites()[0]
         keys = pygame.key.get_pressed()
         if (pygame.time.get_ticks())/(self.birth_time+14400) > 1:
             new_item =Items(self.item_group, self.building_group, self.player_group)

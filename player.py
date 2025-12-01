@@ -77,11 +77,9 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.dy -= self.speed
 
-    def update(self, player_group):
+    def update(self):
 
         self.score = int(pygame.time.get_ticks()/10800)
-        if self.health <= 0:
-            player_group.remove(self)
         
         # updates player position
         self.map_x += self.dx

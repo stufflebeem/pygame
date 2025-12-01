@@ -92,8 +92,10 @@ class Game_over():
         self.stopped = False
         
     def update(self, player_group):
+        self.player_group = player_group
+        player = self.player_group.sprites()[0]
         if self.stopped == False:
-            if len(player_group) == 0:
+            if player.health <= 0:
                 self.stopped = True
                 self.birth_time = pygame.time.get_ticks()
                 self.death_time = 3600

@@ -85,7 +85,7 @@ while running:
             items.update()
         for orcs in orc_group:
             orcs.update(player_group)
-        player.update(player_group)
+        player.update()
 
 
     # drawing

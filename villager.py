@@ -98,11 +98,8 @@ class Villager(pygame.sprite.Sprite):
     def update(self, player_group):
         """player_group: player_group"""
         self.player_group = player_group
-        try:
-            player = self.player_group.sprites()[0]
-        except IndexError:
-            return None
-        
+        player = self.player_group.sprites()[0]
+
         # checks health
         if self.health <= 0:
             self.villager_group.remove(self)

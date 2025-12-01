@@ -16,6 +16,7 @@ pygame.mixer.music.play(loops=-1)
 pygame.mixer.music.set_volume(0.1)
 attack_sound = pygame.mixer.Sound('sounds/attack.wav')
 death_sound = pygame.mixer.Sound('sounds/death.wav')
+death_sound.set_volume(0.2)
 
 # creates essential game variables
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -105,7 +106,7 @@ while running:
         for orcs in orc_group:
             orcs.update(player_group, death_sound)
         player.update()
-        score.update_score(level, game_over)
+        score.update_score(level, game_over, player_group, orc_group)
 
 
     # drawing

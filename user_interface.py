@@ -67,7 +67,7 @@ class Score():
         # creates variables for text
         self.black = (0, 0, 0)
         self.score_font = pygame.font.Font('ui_pack/fonts/LatinmodernmathRegular-z8EBa.otf', 20)
-        self.score_width = 3
+        self.score_width = 40
         self.score_height = 1
 
         # creates surface and image for text
@@ -82,10 +82,14 @@ class Score():
                 for y in range(user_interface['score'][i]['pos_y'][0],user_interface['score'][i]['pos_y'][1]):
                     self.image.blit(pygame.image.load(user_interface['score'][i]['img']), (x * tile_size, y * tile_size))
     
-    def update_score(self, level, game_over):
+    def update_score(self, level, game_over, player_group, orc_group):
         """level = current number of orcs that spawned, reflected in score
             game_over: bolean that determines gamestate"""
-        
+        # checks sprites
+        self.player_group = player_group
+        self.player = self.player_group.sprites()[0]
+        self.orc_group = orc_group
+
         # logic to stop increasing score if gameover
         if game_over.game_over == False:
             self.score_time = int(pygame.time.get_ticks()/5400)
@@ -93,7 +97,39 @@ class Score():
         # displays score surface and calculates score
         self.score_level = level * 100
         self.score = self.score_time + self.score_level
-        self.score_surface = self.score_font.render(f"{self.score}", 1, self.black)
+        self.score_surface = self.score_font.render(f"Score:{self.score}", 1, self.black)
+
+        # displays health surface and calculates health
+        self.health = int(self.player.health)
+        self.health_surface = self.score_font.render(f"Health:{self.health}", 1, self.black)
+
+        # displays defense surface and calculates defense
+        self.defense = int(self.player.defense)
+        self.defense_surface = self.score_font.render(f"Defense:{self.defense}", 1, self.black)
+
+        # displays attack surface and calculates attack
+        self.attack = int(self.player.attack)
+        self.attack_surface = self.score_font.render(f"Attack:{self.attack}", 1, self.black)
+
+         # creates parameters to detect ability to attack an orc
+        closest_orc = None
+        closest_distance = 16 * tile_size
+
+        # loops over every orc to see if any are in the range
+        for orc in self.orc_group: 
+            distance = ((orc.map_x - self.player.map_x)**2 + (orc.map_y - self.player.map_y)**2)**0.5 
+            if distance < closest_distance:
+                closest_distance = distance
+                closest_orc = orc
+        if closest_orc == None:
+            self.enemy_health_surface = self.score_font.render(f"Enemy Health: None", 1, self.black)
+        else:
+            # displays enemy health surface and calculates enemy health
+            self.enemy_health = int(closest_orc.health)
+            self.enemy_health_surface = self.score_font.render(f"Enemy Health:{self.enemy_health}", 1, self.black)
+
+
+
     
     def draw(self, screen_surface):
         """screen_surface: game surface for the background to be blitted onto"""
@@ -101,6 +137,10 @@ class Score():
         screen_y = 17
         screen_surface.blit(self.image, (screen_x, screen_y))
         screen_surface.blit(self.score_surface, (32,22))
+        screen_surface.blit(self.health_surface, (128,22))
+        screen_surface.blit(self.defense_surface, (224,22))
+        screen_surface.blit(self.attack_surface, (320,22))
+        screen_surface.blit(self.enemy_health_surface, (416,22))
 
 class Game_over():
     def __init__ (self):

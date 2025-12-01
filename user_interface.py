@@ -64,8 +64,12 @@ class Score():
                 for y in range(user_interface['score'][i]['pos_y'][0],user_interface['score'][i]['pos_y'][1]):
                     self.image.blit(pygame.image.load(user_interface['score'][i]['img']), (x * tile_size, y * tile_size))
     
-    def update_score(self, score):
-        self.score_surface = self.score_font.render(f"{score}", 1, self.black)
+    def update_score(self, level, game_over):
+        if game_over.game_over == False:
+            self.score_time = int(pygame.time.get_ticks()/5400)
+        self.score_level = level * 100
+        self.score = self.score_time + self.score_level
+        self.score_surface = self.score_font.render(f"{self.score}", 1, self.black)
     
     def draw(self, screen_surface):
         """screen_surface: game surface for the background to be blitted onto
@@ -81,17 +85,17 @@ class Game_over():
         self.black = (0,0,0)
         self.red = (255,0,0)
         self.game_over_font = pygame.font.Font('ui_pack/fonts/LatinmodernmathRegular-z8EBa.otf', 80)
+        self.score_font = pygame.font.Font('ui_pack/fonts/LatinmodernmathRegular-z8EBa.otf', 50)
         self.game_over_surface = self.game_over_font.render('You Died', 1, self.red)
-        self.title_rect = self.game_over_surface.get_rect()
-        self.title_rect.center = (WIDTH//2, HEIGHT//2)
-        self.instructions_font = pygame.font.Font('ui_pack/fonts/LatinmodernmathRegular-z8EBa.otf', 24)
+        self.game_over_rect = self.game_over_surface.get_rect()
+        self.game_over_rect.center = (WIDTH//2, HEIGHT//2)
         self.image = pygame.Surface([WIDTH, HEIGHT],pygame.SRCALPHA)
         self.image.fill(self.black)
         self.rect = self.image.get_rect()
         self.game_over = False
         self.stopped = False
         
-    def update(self, player_group):
+    def update(self, player_group, villager_group):
         self.player_group = player_group
         player = self.player_group.sprites()[0]
         if self.stopped == False:
@@ -100,19 +104,30 @@ class Game_over():
                 self.birth_time = pygame.time.get_ticks()
                 self.death_time = 3600
                 self.game_over = True
+            if len(villager_group)<= 0:
+                self.stopped = True
+                self.birth_time = pygame.time.get_ticks()
+                self.death_time = 3600
+                self.game_over = True
         else:
             return
-            
     
-    def draw(self, screen):
+    
+    def draw(self, screen, score):
         if self.game_over == True:
+            pygame.mixer.music.stop()
             screen.blit(self.image, (0,0))
             current_age = pygame.time.get_ticks() - self.birth_time
             current_age_percent = current_age/self.death_time
             alpha = current_age_percent * 255
             self.game_over_surface = self.game_over_font.render('You Died', 1, self.red)
             self.game_over_surface.set_alpha(alpha)
-            screen.blit(self.game_over_surface, self.title_rect)
+            self.score_surface = self.score_font.render(f'Score: {score.score}', 1, self.red)
+            self.score_surface.set_alpha(alpha)
+            self.score_rect = self.game_over_surface.get_rect()
+            self.score_rect.center = (WIDTH//2, 3*HEIGHT//4)
+            screen.blit(self.game_over_surface, self.game_over_rect)
+            screen.blit(self.score_surface, self.score_rect)
 
 def pause(paused, screen):
     if paused:

@@ -82,7 +82,7 @@ class Guard(pygame.sprite.Sprite):
         self.last_map_y = self.map_y
         
     # needs to create an automatically updating system for guards to move and ineract with the world around them
-    def update(self,player_group):
+    def update(self,player_group, death_sound):
         """player_group: player_group"""
         self.player_group = player_group
         player = self.player_group.sprites()[0]
@@ -90,8 +90,8 @@ class Guard(pygame.sprite.Sprite):
         # checks health
         if self.health <= 0:
             self.guard_group.remove(self)
-
-
+            death_sound.play()
+        
         # records last collison free position
         self.last_map_x = self.map_x
         self.last_map_y = self.map_y

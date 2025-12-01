@@ -26,7 +26,7 @@ class Player(pygame.sprite.Sprite):
         self.range = 1
         self.reload = 0
         self.reload_time = 0
-        self.health = 5
+        self.health = 10
 
         # creates a transparent surface for the sprite
         self.image = pygame.Surface([tile_size,tile_size],pygame.SRCALPHA)
@@ -79,8 +79,6 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
 
-        self.score = int(pygame.time.get_ticks()/10800)
-        
         # updates player position
         self.map_x += self.dx
         self.map_y += self.dy
@@ -105,7 +103,8 @@ class Player(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(self, self.orc_group, False):
             self.map_x -= self.dx
             self.map_y -= self.dy
-    def attack(self):
+
+    def attacking(self, attack_sound):
         # loops over every orc to see if any are in the range
         target = False
         closest_orc = None
@@ -119,6 +118,7 @@ class Player(pygame.sprite.Sprite):
         # if orcs are in range subtracts health from the nearest one and starts cooldown
         if target == True and self.reload_time < pygame.time.get_ticks():
             closest_orc.health -= self.attack * (1/closest_orc.defense)
+            attack_sound.play()
             closest_orc.dx = -self.dx
             closest_orc.dy = -self.dy
             self.reload_time = pygame.time.get_ticks() + self.reload * 60

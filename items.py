@@ -106,7 +106,7 @@ class Items(pygame.sprite.Sprite):
             player.range = 1
             player.reload = 0
             player.reload_time = 0
-            player.health = 5
+            player.health = 10
             for key, item in player_items.items():
                 if item == "none":
                     continue

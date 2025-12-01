@@ -6,12 +6,22 @@ from user_interface import *
 
 # pygame setup
 pygame.init()
+pygame.mixer.init()
+pygame.display.set_caption("Adventure Game")
+pygame.mouse.set_visible(False)
+
+# set up sounds
+pygame.mixer.music.load('sounds/background.mp3')
+pygame.mixer.music.play(loops=-1)
+pygame.mixer.music.set_volume(0.1)
+attack_sound = pygame.mixer.Sound('sounds/attack.wav')
+death_sound = pygame.mixer.Sound('sounds/death.wav')
+
+# creates essential game variables
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 running = True
 paused = False
-pygame.display.set_caption("Adventure Game")
-pygame.mouse.set_visible(False)
 
 # creates spritesheet to gather sprites
 sprite_sheet = pygame.image.load('characters/sprites/roguelikeChar_transparent.png').convert_alpha()
@@ -25,7 +35,7 @@ grass = Tiles()
 # create a border of trees around the map
 tree = Tree() 
 
-# create a variety of buildings on the map
+# create groups for sprites on the map
 building_group = pygame.sprite.Group()
 villager_group = pygame.sprite.Group()
 guard_group = pygame.sprite.Group()
@@ -38,9 +48,11 @@ player = Player(building_group, villager_group, guard_group, orc_group)
 player_group = pygame.sprite.Group()
 player_group.add(player)
 
-# creates items
+# creates items for player to interact with
 item_group = pygame.sprite.Group()
 create_items(item_group, building_group, player_group)
+
+# creates various UI screens
 start = Start()
 score = Score()
 game_over = Game_over()
@@ -56,7 +68,7 @@ while running:
                 paused = not paused
             if event.key == pygame.K_SPACE:
                 presses += 1
-                player.attack 
+                player.attacking(attack_sound)
     screen.fill('black')
    
 # RENDER YOUR GAME HERE
@@ -78,14 +90,15 @@ while running:
             create_orcs(building_group, villager_group, guard_group, orc_group)
             print(f"Level {level}")
         for villager in villager_group:
-            villager.update(player_group)
+            villager.update(player_group, death_sound)
         for guard in guard_group:
-            guard.update(player_group) 
+            guard.update(player_group, death_sound) 
         for items in item_group:
             items.update()
         for orcs in orc_group:
-            orcs.update(player_group)
+            orcs.update(player_group, death_sound)
         player.update()
+        score.update_score(level, game_over)
 
 
     # drawing
@@ -106,12 +119,11 @@ while running:
 
     # title
     score.draw(screen)
-    score.update_score(player.score)
     start.update(presses)
     start.draw(screen)
     pause(paused, screen)
-    game_over.update(player_group)
-    game_over.draw(screen)
+    game_over.update(player_group, villager_group)
+    game_over.draw(screen, score)
     
     # flip() the display to put your work on the screen
     pygame.display.flip()

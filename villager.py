@@ -95,13 +95,14 @@ class Villager(pygame.sprite.Sprite):
         self.last_map_y = self.map_y
         
     # needs to create an automatically updating system for villagers to move and ineract with the world around them
-    def update(self, player_group):
+    def update(self, player_group, death_sound):
         """player_group: player_group"""
         self.player_group = player_group
         player = self.player_group.sprites()[0]
 
         # checks health
         if self.health <= 0:
+            death_sound.play()
             self.villager_group.remove(self)
 
         # records last collison free position

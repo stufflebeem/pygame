@@ -20,7 +20,7 @@ class Guard(pygame.sprite.Sprite):
 
         # creates guard stats
         self.speed = 1
-        self.defense = 0
+        self.defense = 1
         self.attack = 0
         self.range = 1
         self.health = 3

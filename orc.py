@@ -17,7 +17,7 @@ class Orc(pygame.sprite.Sprite):
 
         # creates orc stats
         self.speed = 1
-        self.defense = 0
+        self.defense = 1
         self.attack = 0
         self.range = 1
         self.health = 2
@@ -235,7 +235,6 @@ class Orc(pygame.sprite.Sprite):
                 target = True
         
         if target == True and self.reload_time < pygame.time.get_ticks():
-            print(closest_enemy.health)
             closest_enemy.health -= self.attack * (1/closest_enemy.defense)
             closest_enemy.dx = -self.dx
             closest_enemy.dy = -self.dy

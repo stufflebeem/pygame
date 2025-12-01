@@ -9,6 +9,7 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 running = True
+paused = False
 pygame.display.set_caption("Adventure Game")
 pygame.mouse.set_visible(False)
 
@@ -50,9 +51,12 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                paused = not paused
     screen.fill('black')
    
-    # RENDER YOUR GAME HERE
+# RENDER YOUR GAME HERE
 
     # creates a camera function to keep player centered and move other sprites and backgrounds
     camera_x = player.map_x - WIDTH/2
@@ -64,11 +68,21 @@ while running:
     screen.blit(zoomed_surface, zoom_rect)
     
     # functions
-    player.keys()
-    if len(orc_group) == 0:
-        level += 1
-        create_orcs(building_group, villager_group, guard_group, orc_group)
-        print(f"Level {level}")
+    if not paused:
+        player.keys()
+        if len(orc_group) == 0:
+            level += 1
+            create_orcs(building_group, villager_group, guard_group, orc_group)
+            print(f"Level {level}")
+        for villager in villager_group:
+            villager.update(player_group)
+        for guard in guard_group:
+            guard.update(player_group) 
+        for items in item_group:
+            items.update()
+        for orcs in orc_group:
+            orcs.update(player_group)
+        player.update()
 
     # drawing
     grass.draw(game_surface, camera_x, camera_y)
@@ -77,25 +91,22 @@ while running:
         building.draw(game_surface, camera_x, camera_y)
     for villager in villager_group:
         villager.draw(game_surface, camera_x, camera_y)
-        villager.update(player_group)
     for guard in guard_group:
-        guard.draw(game_surface, camera_x, camera_y)
-        guard.update(player_group) 
+        guard.draw(game_surface, camera_x, camera_y) 
     for items in item_group:
         items.draw(game_surface, camera_x, camera_y)
-        items.update()
     for orcs in orc_group:
         orcs.draw(game_surface, camera_x, camera_y)
-        orcs.update(player_group)
     player.draw(game_surface)
-    player.update()
+
 
     # title
     score.draw(screen)
     score.update_score(player.score)
     start.update()
     start.draw(screen)
-    game_over.update()
+    pause(paused, screen)
+    game_over.update(player_group)
     game_over.draw(screen)
     
     # flip() the display to put your work on the screen

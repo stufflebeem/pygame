@@ -116,3 +116,12 @@ class Game_over():
             alpha = current_age_percent * 255
             self.game_over_surface.set_alpha(alpha)
             screen.blit(self.game_over_surface, self.title_rect)
+
+def pause(paused, screen):
+    if paused:
+        silver = (168, 169, 174)
+        paused_font = pygame.font.Font('ui_pack/fonts/LatinmodernmathRegular-z8EBa.otf', 80)
+        paused_surface = paused_font.render('𝕻𝖆𝖚𝖘𝖊𝖉', 1, silver)
+        paused_rect = paused_surface.get_rect()
+        paused_rect.center = (WIDTH//2, HEIGHT//2)
+        screen.blit(paused_surface, paused_rect)

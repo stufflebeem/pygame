@@ -50,7 +50,7 @@ class Guard(pygame.sprite.Sprite):
         weapon = randint(0, len(guard_weapons)-1)
         guard_weapon = (f"weapon_{guard_weapons[weapon]}")
 
-        # blits the guard sprite onto transparant surface
+        # blits the guard+ sprite onto transparant surface
         self.items = {'model': guard_model, 'pants' : guard_pants, 'boots' : guard_boots, 'shirt' : guard_shirt,
                 'hair' : "none", 'helmet' : guard_helmet, 'shield' : "none", 'weapon' : guard_weapon}
         blit_list = [guard_model,  guard_shirt, guard_pants, guard_boots, guard_helmet, guard_weapon]

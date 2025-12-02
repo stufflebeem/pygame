@@ -82,14 +82,14 @@ class Score():
                 for y in range(user_interface['score'][i]['pos_y'][0],user_interface['score'][i]['pos_y'][1]):
                     self.image.blit(pygame.image.load(user_interface['score'][i]['img']), (x * tile_size, y * tile_size))
     
-    def update_score(self, level, game_over, player_group, orc_group):
+    def update_score(self, level, game_over, player_group, orc_group, villager_group):
         """level = current number of orcs that spawned, reflected in score
             game_over: bolean that determines gamestate"""
         # checks sprites
         self.player_group = player_group
         self.player = self.player_group.sprites()[0]
         self.orc_group = orc_group
-
+        self.villager_group = villager_group
         # logic to stop increasing score if gameover
         if game_over.game_over == False:
             self.score_time = int(pygame.time.get_ticks()/5400)
@@ -127,9 +127,13 @@ class Score():
             # displays enemy health surface and calculates enemy health
             self.enemy_health = int(closest_orc.health)
             self.enemy_health_surface = self.score_font.render(f"Enemy Health:{self.enemy_health}", 1, self.black)
+        
+        # displays number of villagers
+        self.villagers = len(self.villager_group)
+        self.villagers_surface = self.score_font.render(f"Villager: {self.villagers}", 1, self.black)
 
-
-
+        # displays level
+        self.level_surface = self.score_font.render(f"Level: {level}", 1, self.black)
     
     def draw(self, screen_surface):
         """screen_surface: game surface for the background to be blitted onto"""
@@ -141,6 +145,8 @@ class Score():
         screen_surface.blit(self.defense_surface, (224,22))
         screen_surface.blit(self.attack_surface, (320,22))
         screen_surface.blit(self.enemy_health_surface, (416,22))
+        screen_surface.blit(self.villagers_surface, (608,22))
+        screen_surface.blit(self.level_surface, (720,22))
 
 class Game_over():
     def __init__ (self):
@@ -213,9 +219,9 @@ class Game_over():
 def pause(paused, screen):
     if paused:
         # writes paused on the screen if the game is paused
-        silver = (168, 169, 174)
+        black = (0, 0, 0)
         paused_font = pygame.font.Font('ui_pack/fonts/LatinmodernmathRegular-z8EBa.otf', 80)
-        paused_surface = paused_font.render('𝕻𝖆𝖚𝖘𝖊𝖉', 1, silver)
+        paused_surface = paused_font.render('𝕻𝖆𝖚𝖘𝖊𝖉', 1, black)
         paused_rect = paused_surface.get_rect()
         paused_rect.center = (WIDTH//2, HEIGHT//2)
         screen.blit(paused_surface, paused_rect)

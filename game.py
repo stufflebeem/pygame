@@ -42,7 +42,7 @@ villager_group = pygame.sprite.Group()
 guard_group = pygame.sprite.Group()
 orc_group = pygame.sprite.Group()
 create_buildings(building_group, villager_group, guard_group, orc_group)
-create_orcs(building_group, villager_group, guard_group, orc_group)
+create_orcs(building_group, villager_group, guard_group, orc_group, level)
 
 # creates player centered in the map
 player = Player(building_group, villager_group, guard_group, orc_group)
@@ -94,7 +94,7 @@ while running:
         # increases level when orcs are gone and spawns more
         if len(orc_group) == 0:
             level += 1
-            create_orcs(building_group, villager_group, guard_group, orc_group)
+            create_orcs(building_group, villager_group, guard_group, orc_group, level)
 
         # updates sprites and score
         for villager in villager_group:
@@ -106,7 +106,7 @@ while running:
         for orcs in orc_group:
             orcs.update(player_group, death_sound)
         player.update()
-        score.update_score(level, game_over, player_group, orc_group)
+        score.update_score(level, game_over, player_group, orc_group, villager_group)
 
 
     # drawing

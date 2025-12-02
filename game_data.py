@@ -26,8 +26,8 @@ instructions = ["𝖂𝖊𝖑𝖈𝖔𝖒𝖊𝖊 𝖙𝖔 𝕬𝖉𝖛𝖊𝖓�
 user_interface = {
 'score':
 {'ribbon_left':{'img':"ui_pack/tiles/large_tiles/thick_outline/tile_0056.png",'pos_x':(0,1),'pos_y':(0,1)},
-'ribbon_middle':{'img':"ui_pack/tiles/large_tiles/thick_outline/tile_0057.png",'pos_x':(1,39),'pos_y':(0,1)},
-'ribbon_right':{'img':"ui_pack/tiles/large_tiles/thick_outline/tile_0058.png",'pos_x':(39,40),'pos_y':(0,1)}},
+'ribbon_middle':{'img':"ui_pack/tiles/large_tiles/thick_outline/tile_0057.png",'pos_x':(1,47),'pos_y':(0,1)},
+'ribbon_right':{'img':"ui_pack/tiles/large_tiles/thick_outline/tile_0058.png",'pos_x':(47,48),'pos_y':(0,1)}},
                   
 }
 

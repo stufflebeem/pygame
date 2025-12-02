@@ -265,7 +265,7 @@ class Orc(pygame.sprite.Sprite):
         screen_y = self.map_y - camera_y
         surface.blit(self.image, (screen_x, screen_y))
 
-def create_orcs(building_group, villager_group, guard_group, orc_group):
+def create_orcs(building_group, villager_group, guard_group, orc_group, level):
     """building_group: sprites in the buildings
         villager_group: sprites in the villagers
         guard_group: sprites in the guards
